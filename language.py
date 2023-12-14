@@ -1,6 +1,6 @@
 translate_dict = {
     # Traducciones Título
-    "title":{"es": "Tablero de Rindes", "en": "Yield Dashboard", "pt": "Painel de Rendimento"},
+    "title":{"es": "Tablero de Lotes y Cultivos", "en": "Fields and Crops Dashboard", "pt": "Painel de Campos e Cultivos"},
     "requested_by": {"es": "Solicitado por: ", "en": "Requested by: ", "pt": "Solicitado por: "},
     "logout": {"es": "Cerrar Sesión", "en": "Logout", "pt": "Sair"},
     "language": {"es": "Idioma", "en": "Language", "pt": "Idioma"},
@@ -31,12 +31,14 @@ translate_dict = {
     # Traducciones Híbrido
     "hybrid_variety": {"es": "Híbrido / Variedad", "en": "Hybrid / Variety", "pt": "Híbrido / Variedade"},
 
+    "hectares": {"es": "Hectáreas", "en": "Hectares", "pt": "Hectares"},
+
     # Traducciones Capas
     "yield_layers": {"es": "Capas de rindes", "en": "Yield Layers", "pt": "Camadas de Rendimento"},
 
     # Traducciones Gráfico
     "select_grouping_field": {"es": "Seleccione un campo de agrupamiento:", "en": "Select a grouping field:", "pt": "Selecione um campo de agrupamento:"},
-    "adjusted_average_yield_by": {"es": "Rendimiento medio ajustado por", "en": "Adjusted Average Yield by", "pt": "Rendimento Médio Ajustado por"},
+    "hectares_by": {"es": "Hectáreas por", "en": "Hectares by", "pt": "Hectares por"},
     "yield_layer": {"es": "Capa de Rinde", "en": "Yield Layer", "pt": "Camada de Rendimento"},
     "adjusted_average_yield": {"es": "Rendimiento Medio Ajustado", "en": "Adjusted Average Yield", "pt": "Rendimento Médio Ajustado"},
     "average_yield" : {"es": "Rendimiento Medio", "en": "Average Yield", "pt": "Rendimento Médio"},
@@ -46,7 +48,7 @@ translate_dict = {
     "weighted_yield": {"es": "Rendimiento Ponderado", "en": "Weighted Yield", "pt": "Rendimento Ponderado"},
 
     # Traducciones mapa
-    "point_map_by_layer_according_to": {"es": "Mapa de puntos por capa según", "en": "Point Map by Layer According to", "pt": "Mapa de Pontos por Camada Segundo"},
+    "point_map_by_field_according_to": {"es": "Mapa de lotes según", "en": "Point Map by Field According to", "pt": "Mapa de Pontos por Campo Segundo"},
         
     # Campos
     "area_field": {"es": "Área", "en": "Area", "pt": "Área"},
@@ -62,7 +64,7 @@ translate_dict = {
 
     "download_csv": {"es" : "Descargar CSV", "en":"Download CSV", "pt":"Baixar CSV"},
 
-    "heatmap": {"es": "Heatmap por rendimiento", "en": "Heatmap by Yield", "pt": "Heatmap por rendimento"},
+    "heatmap": {"es": "Heatmap por Hectáreas", "en": "Heatmap by Hectares", "pt": "Heatmap por Hectares"},
     
 
 }
