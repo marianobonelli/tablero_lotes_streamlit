@@ -478,21 +478,30 @@ if selector_hibrido:
     st.markdown('')
     st.markdown(f"<b>{translate('seeding_date_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
-    # Suponiendo que filtered_df es tu DataFrame
+    # Suponiendo que filtered_df es tu DataFrame y 'hectares' es la columna con las hectáreas
+    # Convertir la fecha de siembra a tipo datetime
     filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
-    filtered_df = filtered_df.sort_values(['crop_date', selected_value])
 
     # Crear una columna de inicio y fin para cada tarea/evento (mismo día)
     filtered_df['start_date'] = filtered_df['crop_date']
     filtered_df['end_date'] = filtered_df['crop_date'] + pd.Timedelta(days=1)
 
-    # Agrupar por fecha y concatenar los nombres de lotes y establecimientos
-    grouped = filtered_df.groupby('crop_date').apply(
+    # Calcular la suma total de hectáreas para cada valor de 'selected_value'
+    hectares_sum = filtered_df.groupby(selected_value)['hectares'].sum().reset_index()
+
+    # Ordenar 'hectares_sum' de mayor a menor
+    hectares_sum = hectares_sum.sort_values('hectares', ascending=False)
+
+    # Unir esta información con el DataFrame original para ordenar los datos
+    filtered_df = pd.merge(filtered_df, hectares_sum[[selected_value]], on=selected_value, how='left')
+
+    # Agrupar por 'selected_value' y fecha, concatenando los nombres de lotes y establecimientos
+    grouped = filtered_df.groupby([selected_value, 'crop_date']).apply(
         lambda x: ' | '.join(x['field_name'] + ' - ' + x['farm_name'])
     ).reset_index(name='info')
 
     # Combinar la información agrupada con el DataFrame original
-    filtered_df = filtered_df.merge(grouped, on='crop_date')
+    filtered_df = pd.merge(filtered_df, grouped, on=[selected_value, 'crop_date'])
 
     # Crear el gráfico de Gantt
     fig = px.timeline(
@@ -505,6 +514,17 @@ if selector_hibrido:
         height=600,
         color_discrete_sequence=selected_colors
     )
+
+    # Añadir líneas verticales para cada cambio de año
+    years = filtered_df['crop_date'].dt.year.unique()
+    for year in years:
+        # Línea para el inicio del año
+        fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
+
+        # Líneas punteadas para cada trimestre
+        for month in [2,3,4,5,6,7,8,9,10,11,12]:  # Abril, Julio, Octubre
+            fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
+
 
     # Configurar el formato y diseño del gráfico
     fig.update_layout(
