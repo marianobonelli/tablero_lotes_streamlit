@@ -65,6 +65,9 @@ translate_dict = {
     "download_csv": {"es" : "Descargar CSV", "en":"Download CSV", "pt":"Baixar CSV"},
 
     "heatmap": {"es": "Heatmap por Hectáreas", "en": "Heatmap by Hectares", "pt": "Heatmap por Hectares"},
-    
+
+    "seeding_date": {'es': 'Fecha de siembra', 'en': 'Seeding Date', 'pt': 'Data de Semeadura'},
+
+    "seeding_date_by": {'es': 'Fecha de siembra por ', 'en': 'Seeding Date by ', 'pt': 'Data de Semeadura por '}      
 
 }

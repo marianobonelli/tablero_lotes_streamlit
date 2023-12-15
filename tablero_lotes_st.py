@@ -442,6 +442,7 @@ if selector_hibrido:
                     f"{translate('field', lang)}: {row['field_name']}<br>"
                     f"{translate('crop', lang)}: {row['crop']}<br>"
                     f"{translate('hybrid_variety', lang)}: {row['hybrid']}<br>"
+                    f"{translate('seeding_date', lang)}: {row['crop_date']}<br>"
                     f"{translate('hectares', lang)}: {row['hectares']}<br>"
                     "</span>")
                 )
@@ -474,124 +475,52 @@ if selector_hibrido:
     # timeline
     ############################################################################
 
-    # import streamlit as st
-    # from streamlit_timeline import timeline
-    # import pandas as pd
-    # import json
-
-    # # Convertir las fechas al formato ISO 8601 y manejar valores nulos
-    # filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'], errors='coerce')  # Convertir a datetime y manejar errores
-    # filtered_df.dropna(subset=['crop_date'], inplace=True)  # Eliminar filas donde 'crop_date' es NaN
-    # filtered_df['crop_date'] = filtered_df['crop_date'].dt.strftime('%Y-%m-%d')  # Convertir fechas a cadena
-
-    # # Agrupar por fecha y consolidar los nombres de los lotes en una lista para cada fecha
-    # grouped_df = filtered_df.groupby('crop_date')['field_name'].apply(list).reset_index(name='lot_names')
-
-    # # Transformar los datos agrupados del DataFrame a la estructura JSON de TimelineJS
-    # def transform_to_timeline_format(df):
-    #     events = []
-    #     for _, row in df.iterrows():
-    #         lot_names_html = '<ul>' + ''.join(f'<li>{name}</li>' for name in row['lot_names']) + '</ul>'
-    #         event = {
-    #             "start_date": {
-    #                 "year": row["crop_date"].split('-')[0],
-    #                 "month": row["crop_date"].split('-')[1],
-    #                 "day": row["crop_date"].split('-')[2],
-    #             },
-    #             "text": {
-    #                 "headline": f"Lotes",
-    #                 "text": f"<p></p>{lot_names_html}"
-    #             }
-    #             # Puedes agregar la sección de 'media' si es necesario
-    #         }
-    #         events.append(event)
-
-    #     timeline_json = {
-    #         "title": {
-    #             "media": {
-    #                 "url": "",  # URL a una imagen o video para el título si es necesario
-    #                 "caption": "",
-    #                 "credit": ""
-    #             },
-    #             "text": {
-    #                 "headline": "Título Principal de la Línea de Tiempo",
-    #                 "text": "<p>Descripción de la línea de tiempo aquí.</p>"
-    #             }
-    #         },
-    #         "events": events
-    #     }
-
-    #     return timeline_json
-
-    # # Generar la estructura de datos para la línea de tiempo
-    # timeline_data = transform_to_timeline_format(grouped_df)
-
-    # # Renderizar la línea de tiempo
-    # timeline(timeline_data, height=500)
-
-    ############################################################################
+    st.markdown('')
+    st.markdown(f"<b>{translate('seeding_date_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
     # Suponiendo que filtered_df es tu DataFrame
-    # # Asegurándonos de que 'crop_date' está en formato de fecha
-    # filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
+    filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
+    filtered_df = filtered_df.sort_values(['crop_date', selected_value])
 
-    # # Ordenamos primero por fecha y luego por el valor seleccionado
-    # filtered_df = filtered_df.sort_values(['crop_date', selected_value])
+    # Crear una columna de inicio y fin para cada tarea/evento (mismo día)
+    filtered_df['start_date'] = filtered_df['crop_date']
+    filtered_df['end_date'] = filtered_df['crop_date'] + pd.Timedelta(days=1)
 
-    # # Agregamos una nueva columna que cuenta la ocurrencia de cada capa por fecha
-    # filtered_df['layer_count'] = filtered_df.groupby('crop_date').cumcount() + 1
+    # Agrupar por fecha y concatenar los nombres de lotes y establecimientos
+    grouped = filtered_df.groupby('crop_date').apply(
+        lambda x: ' | '.join(x['field_name'] + ' - ' + x['farm_name'])
+    ).reset_index(name='info')
 
-    # st.markdown('')
-    # st.markdown(f"<b>{translate('hectares_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
+    # Combinar la información agrupada con el DataFrame original
+    filtered_df = filtered_df.merge(grouped, on='crop_date')
 
-    # # Crear un gráfico de puntos interactivo con Plotly
-    # fig = px.scatter(
-    #     filtered_df,
-    #     x='crop_date',      # Fecha de cosecha como eje X
-    #     y='layer_count',    # Contador de capas como eje Y
-    #     color=selected_value,  # Color de los puntos según la selección
-    #     labels={'crop_date': 'Fecha de Cosecha', 'layer_count': 'Número de Capa', selected_value: selected_key},
-    #     height=300,
-    #     color_discrete_sequence=selected_colors  # Paleta de colores
-    # )
+    # Crear el gráfico de Gantt
+    fig = px.timeline(
+        filtered_df,
+        x_start='start_date',
+        x_end='end_date',
+        y=selected_value,
+        color=selected_value,
+        labels={'crop_date': translate('seeding_date', lang), selected_value: selected_key},
+        height=600,
+        color_discrete_sequence=selected_colors
+    )
 
-    # # Crear el hovertemplate personalizado
-    # hovertemplate = (
-    #     f"<b>%{{x}}</b><br>"
-    #     f"Número de Capa: %{{y}}<br>"
-    #     f"{selected_key}: %{{{selected_value}}}<br>"
-    # )
+    # Configurar el formato y diseño del gráfico
+    fig.update_layout(
+        font=dict(family="Roboto", size=16),
+        xaxis_title=translate('seeding_date', lang),
+        yaxis_title=selected_key,
+        xaxis=dict(type='date'),
+        yaxis=dict(showgrid=True)
+    )
 
-    # # Aplicar el hovertemplate y datos personalizados al gráfico
-    # fig.update_traces(hovertemplate=hovertemplate)
+    # Configurar el hovertemplate para mostrar la información de lotes y establecimientos
+    fig.update_traces(hovertemplate="%{y}<br>%{x}<br><br>%{customdata[0]}")
+    fig.update_traces(customdata=filtered_df[['info']])
 
-    # # Personalizar la fuente del hoverlabel y el diseño del gráfico
-    # fig.update_layout(
-    #     hoverlabel=dict(
-    #         bgcolor="white",
-    #         font_size=12,
-    #         font_family="Roboto"
-    #     ),
-    #     font=dict(
-    #         family="Roboto",
-    #         size=18,
-    #     ),
-    #     xaxis_title='Fecha de Cosecha',
-    #     yaxis_title='Número de Capa',
-    #     xaxis_tickangle=-45,
-    #     xaxis=dict(
-    #         type='date'  # Esto hace que el eje X se trate como fechas
-    #     ),
-    #     yaxis=dict(
-    #     showgrid=False,  # Esto oculta las líneas horizontales de la cuadrícula
-    #     showticklabels=False  # Esto oculta las etiquetas del eje Y
-    #     ),
-    # )
-    
-
-    # # Mostrar el gráfico en Streamlit
-    # st.plotly_chart(fig, use_container_width=True)
-
+    # Mostrar el gráfico en Streamlit
+    st.plotly_chart(fig, use_container_width=True)
 
     ############################################################################
     # descarga de csv
