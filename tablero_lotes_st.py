@@ -275,7 +275,9 @@ with st.sidebar:
 
 if selector_hibrido:
 
+    st.divider()  # 👈 Draws a horizontal rule
     st.markdown('')
+    st.markdown(f"<b>{translate('metrics', lang)}</b>", unsafe_allow_html=True)
 
     ############################################################################
     # Metricas
@@ -363,6 +365,7 @@ if selector_hibrido:
         translate("hybrid_variety", lang): 'hybrid'
     }
 
+    st.divider()  # 👈 Draws a horizontal rule
     st.markdown('')
 
     # Obtener el índice de 'Farm' en la lista de claves

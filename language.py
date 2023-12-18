@@ -58,6 +58,7 @@ translate_dict = {
         "pt": "Campos sem data de plantio"
     },
 
+    "metrics": {"es": "Métricas", "en": "Metrics", "pt": "Métricas"},
 
     # Traducciones Capas
     "yield_layers": {"es": "Capas de rindes", "en": "Yield Layers", "pt": "Camadas de Rendimento"},
