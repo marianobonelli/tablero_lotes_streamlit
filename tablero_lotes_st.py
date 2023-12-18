@@ -13,6 +13,7 @@ from folium.plugins import HeatMap
 # Importar bibliotecas para integración web y Streamlit
 import streamlit as st
 from streamlit_folium import folium_static
+from streamlit_extras.metric_cards import style_metric_cards 
 
 # Importar bibliotecas para manejo de imágenes
 from PIL import Image
@@ -351,6 +352,8 @@ if selector_hibrido:
         lotes_sin_fecha_siembra, 
         f"{porcentaje_sin_fecha_siembra:.2f}%"
     )
+
+    style_metric_cards(border_left_color="#0e112c")
 
     ############################################################################
     # Agrupar valores por
