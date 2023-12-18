@@ -275,6 +275,81 @@ with st.sidebar:
 
 if selector_hibrido:
 
+    st.markdown('')
+
+    ############################################################################
+    # Metricas
+    ############################################################################
+
+    col1, col2, col3, col4, col5 = st.columns(5)
+
+    # Establecimientos
+    col1.metric(
+        translate("farms", lang), 
+        len(filtered_df['farm_name'].unique())
+    )
+
+    # Lotes
+    total_lotes = len(filtered_df['field_name'])
+    col2.metric(
+        translate("fields", lang), 
+        total_lotes
+    )
+
+    # Hectáreas
+    total_hectareas = sum(filtered_df['hectares'])  # Suma sin convertir a miles
+    col3.metric(
+        translate("hectares", lang), 
+        f"{total_hectareas:,.0f}"  # Formatea con separadores de miles y sin decimales
+    )
+
+    # Cultivos
+    col4.metric(
+        translate("crops", lang), 
+        len(filtered_df['crop'].unique())
+    )
+
+    # Híbridos
+    col5.metric(
+        translate("hybrid_varieties", lang), 
+        len(filtered_df['hybrid'].unique())
+    )
+        
+    ############################################################################
+
+    # Agregar las métricas
+    col1, col2, col3, col4, col5 = st.columns(5)
+
+    # Lotes sin cultivo
+    lotes_sin_cultivo = len(filtered_df[filtered_df['crop'] == '-No asignado-'])
+    porcentaje_sin_cultivo = (lotes_sin_cultivo / total_lotes) * -100 if total_lotes > 0 else 0
+
+    col1.metric(
+        translate("fields_without_crops", lang), 
+        lotes_sin_cultivo, 
+        f"{porcentaje_sin_cultivo:.2f}%"
+    )
+
+    # Lotes sin híbrido
+    lotes_sin_hibrido = len(filtered_df[filtered_df['hybrid'] == '-No asignado-'])
+    porcentaje_sin_hibrido = (lotes_sin_hibrido / total_lotes) * -100 if total_lotes > 0 else 0
+
+    col2.metric(
+        translate("fields_without_hybrids_or_varieties", lang), 
+        lotes_sin_hibrido, 
+        f"{porcentaje_sin_hibrido:.2f}%"
+    )
+
+    # Lotes sin fecha de siembra
+    lotes_sin_fecha_siembra = len(filtered_df[pd.isna(filtered_df['crop_date'])])
+    porcentaje_sin_fecha_siembra = (lotes_sin_fecha_siembra / total_lotes) * -100 if total_lotes > 0 else 0
+
+    col3.metric(
+        translate("fields_without_sowing_date", lang), 
+        lotes_sin_fecha_siembra, 
+        f"{porcentaje_sin_fecha_siembra:.2f}%"
+    )
+
     ############################################################################
     # Agrupar valores por
     ############################################################################
@@ -471,7 +546,7 @@ if selector_hibrido:
     LayerControl(collapsed=True).add_to(m)
 
     # m.save("map.html")
-    folium_static(m, width=850)
+    folium_static(m, width=900)
 
     ############################################################################
     # timeline

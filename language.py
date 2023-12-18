@@ -21,17 +21,43 @@ translate_dict = {
 
     # Traducciones Farm
     "farm": {"es": "Establecimiento", "en": "Farm", "pt": "Fazenda"},
+    "farms": {"es": "Establecimientos", "en": "Farms", "pt": "Fazendas"},
 
     # Traducciones Field
     "field": {"es": "Lote", "en": "Field", "pt": "Campo"},
+    "fields": {"es": "Lotes", "en": "Fields", "pt": "Campos"},
 
     # Traducciones Cultivo
     "crop": {"es": "Cultivo", "en": "Crop", "pt": "Cultivo"},
+    "crops": {"es": "Cultivos", "en": "Crops", "pt": "Cultivos"},
 
     # Traducciones Híbrido
     "hybrid_variety": {"es": "Híbrido / Variedad", "en": "Hybrid / Variety", "pt": "Híbrido / Variedade"},
+    "hybrid_varieties": {"es": "Híbridos / Variedades", "en": "Hybrids / Varieties", "pt": "Híbridos / Variedades"},    
 
     "hectares": {"es": "Hectáreas", "en": "Hectares", "pt": "Hectares"},
+
+    # Traducciones para "lotes sin cultivos"
+    "fields_without_crops": {
+        "es": "Lotes sin cultivos",
+        "en": "Fields without crops",
+        "pt": "Campos sem cultivos"
+    },
+
+    # Traducciones para "lotes sin híbridos o variedades"
+    "fields_without_hybrids_or_varieties": {
+        "es": "Lotes sin híbridos/variedades",
+        "en": "Fields without hybrids/varieties",
+        "pt": "Campos sem híbridos/variedades"
+    },
+
+    # Traducciones para "lotes sin fecha de siembra"
+    "fields_without_sowing_date": {
+        "es": "Lotes sin fecha de siembra",
+        "en": "Fields without sowing date",
+        "pt": "Campos sem data de plantio"
+    },
+
 
     # Traducciones Capas
     "yield_layers": {"es": "Capas de rindes", "en": "Yield Layers", "pt": "Camadas de Rendimento"},
