@@ -401,10 +401,17 @@ if selector_hibrido:
     # mapa
     ############################################################################
 
-    # Mapear los colores del gráfico a los valores únicos de la columna de agrupamiento
+    # Calcular la suma total de hectáreas para cada valor de 'selected_value' y crear un campo de orden
+    hectares_order = filtered_df.groupby(selected_value)['hectares'].sum().sort_values(ascending=False).reset_index()
+    hectares_order['order'] = range(1, len(hectares_order) + 1)
+
+    # Unir esta información con el DataFrame original para añadir el campo de orden
+    filtered_df = pd.merge(filtered_df, hectares_order[[selected_value, 'order']], on=selected_value, how='left')
+
+    # Mapear los colores del gráfico a los valores únicos de la columna de orden
     colors = selected_colors
-    color_map = {val: colors[i % len(colors)] for i, val in enumerate(grouped_df[selected_value])}
-    filtered_df['color'] = filtered_df[selected_value].map(color_map)
+    color_map = {val: colors[i % len(colors)] for i, val in enumerate(hectares_order['order'])}
+    filtered_df['color'] = filtered_df['order'].map(color_map)
 
     # Convertir la columna 'centroid' a objetos de geometría
     filtered_df['geometry'] = filtered_df['centroid'].apply(wkt.loads)
@@ -417,8 +424,8 @@ if selector_hibrido:
     m = folium.Map(location=[gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()], zoom_start=7)
     feature_groups = {}
 
-    # Preparar los datos para el heatmap (una lista de listas, cada sublista contiene latitud, longitud y un valor para el heatmap)
-    heat_data = [[row.geometry.y, row.geometry.x, row['hectares']] for idx, row in gdf.iterrows()] 
+    # Preparar los datos para el heatmap
+    heat_data = [[row.geometry.y, row.geometry.x, row['hectares']] for idx, row in gdf.iterrows()]
 
     for group_name in grouped_df[selected_value]:
         for idx, row in filtered_df[filtered_df[selected_value] == group_name].iterrows():
@@ -445,30 +452,25 @@ if selector_hibrido:
                     f"{translate('seeding_date', lang)}: {row['crop_date']}<br>"
                     f"{translate('hectares', lang)}: {row['hectares']}<br>"
                     "</span>")
-                )
-            
+            )
             marker.add_to(feature_groups[group_name])
 
     for group_name, feature_group in feature_groups.items():
         feature_group.add_to(m)
 
     # Agregar heatmap al mapa como un layer adicional
-
-    heatmap_feature_group = FeatureGroup(name=translate('heatmap', lang), show=False)  # Creamos un nuevo FeatureGroup para el heatmap
-    HeatMap(heat_data).add_to(heatmap_feature_group)  # Agregamos el heatmap a este FeatureGroup
-    heatmap_feature_group.add_to(m)  # Agregamos el FeatureGroup al mapa
+    heatmap_feature_group = FeatureGroup(name=translate('heatmap', lang), show=False)
+    HeatMap(heat_data).add_to(heatmap_feature_group)
+    heatmap_feature_group.add_to(m)
 
     # Agrega la capa de teselas de Esri World Imagery
-    tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' 
+    tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
     attr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-
-    # Agrega las capas de teselas adicionales y el control de capas
     folium.TileLayer(tiles, attr=attr, name='Esri World Imagery', show=True).add_to(m)
 
     LayerControl(collapsed=True).add_to(m)
 
     # m.save("map.html")
-
     folium_static(m, width=850)
 
     ############################################################################
@@ -478,22 +480,13 @@ if selector_hibrido:
     st.markdown('')
     st.markdown(f"<b>{translate('seeding_date_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
-    # Suponiendo que filtered_df es tu DataFrame y 'hectares' es la columna con las hectáreas
-    # Convertir la fecha de siembra a tipo datetime
+    # Convertir la fecha de siembra a tipo datetime y crear columnas de inicio y fin
     filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
-
-    # Crear una columna de inicio y fin para cada tarea/evento (mismo día)
     filtered_df['start_date'] = filtered_df['crop_date']
     filtered_df['end_date'] = filtered_df['crop_date'] + pd.Timedelta(days=1)
 
-    # Calcular la suma total de hectáreas para cada valor de 'selected_value'
-    hectares_sum = filtered_df.groupby(selected_value)['hectares'].sum().reset_index()
-
-    # Ordenar 'hectares_sum' de mayor a menor
-    hectares_sum = hectares_sum.sort_values('hectares', ascending=False)
-
-    # Unir esta información con el DataFrame original para ordenar los datos
-    filtered_df = pd.merge(filtered_df, hectares_sum[[selected_value]], on=selected_value, how='left')
+    # Ordenar el DataFrame por el campo de orden antes de crear el gráfico de Gantt
+    filtered_df = filtered_df.sort_values(by='order')
 
     # Agrupar por 'selected_value' y fecha, concatenando los nombres de lotes y establecimientos
     grouped = filtered_df.groupby([selected_value, 'crop_date']).apply(
@@ -518,13 +511,9 @@ if selector_hibrido:
     # Añadir líneas verticales para cada cambio de año
     years = filtered_df['crop_date'].dt.year.unique()
     for year in years:
-        # Línea para el inicio del año
         fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
-
-        # Líneas punteadas para cada trimestre
-        for month in [2,3,4,5,6,7,8,9,10,11,12]:  # Abril, Julio, Octubre
+        for month in [2,3,4,5,6,7,8,9,10,11,12]:
             fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
-
 
     # Configurar el formato y diseño del gráfico
     fig.update_layout(
@@ -541,6 +530,7 @@ if selector_hibrido:
 
     # Mostrar el gráfico en Streamlit
     st.plotly_chart(fig, use_container_width=True)
+
 
     ############################################################################
     # descarga de csv
