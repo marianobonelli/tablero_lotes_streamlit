@@ -677,7 +677,7 @@ if selector_hibrido:
                 st.plotly_chart(fig, use_container_width=True)
 
             with tab2:
-                                
+                
                 # Permitir al usuario seleccionar un valor específico para el análisis
                 selected_analysis_value = st.selectbox(selected_key, filtered_df[selected_value].unique())
 
@@ -707,7 +707,6 @@ if selector_hibrido:
 
                 # Configurar títulos de ejes y diseño del gráfico
                 fig.update_layout(
-                    # title_text=f"{translate('hectares_analysis', lang)}: {selected_analysis_value}",
                     font=dict(family="Roboto", size=16),
                     legend=dict(
                         orientation="h",
@@ -719,13 +718,20 @@ if selector_hibrido:
                 )
 
                 fig.update_xaxes(title_text=translate('seeding_date', lang))
-                fig.update_yaxes(title_text=translate('hectares_per_date', lang), secondary_y=False)
-                fig.update_yaxes(title_text=translate('accumulated_hectares', lang), secondary_y=True)
+                
+                # Actualizar ejes Y para no mostrar la cuadrícula
+                fig.update_yaxes(
+                    title_text=translate('hectares_per_date', lang),
+                    # showgrid=False,
+                    secondary_y=False)
+                
+                fig.update_yaxes(
+                    title_text=translate('accumulated_hectares', lang),
+                    showgrid=False,
+                    secondary_y=True)
 
                 # Mostrar el gráfico en Streamlit
                 st.plotly_chart(fig, use_container_width=True)
-
-
 
 
         ############################################################################
