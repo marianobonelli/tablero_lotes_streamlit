@@ -611,60 +611,62 @@ if selector_hibrido:
         # timeline
         ############################################################################
 
-        st.markdown('')
-        st.markdown(f"<b>{translate('seeding_date_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
+        # Verificar si hay fechas de siembra válidas en el DataFrame filtrado
+        if not filtered_df['crop_date'].isna().all():   
 
-        # Convertir la fecha de siembra a tipo datetime y crear columnas de inicio y fin
-        filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
-        filtered_df['start_date'] = filtered_df['crop_date']
-        filtered_df['end_date'] = filtered_df['crop_date'] + pd.Timedelta(days=1)
+            st.markdown('')
+            st.markdown(f"<b>{translate('seeding_date_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
-        # Ordenar el DataFrame por el campo de orden antes de crear el gráfico de Gantt
-        filtered_df = filtered_df.sort_values(by='order')
+            # Convertir la fecha de siembra a tipo datetime y crear columnas de inicio y fin
+            filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
+            filtered_df['start_date'] = filtered_df['crop_date']
+            filtered_df['end_date'] = filtered_df['crop_date'] + pd.Timedelta(days=1)
 
-        # Agrupar por 'selected_value' y fecha, concatenando los nombres de lotes y establecimientos
-        grouped = filtered_df.groupby([selected_value, 'crop_date']).apply(
-            lambda x: ' | '.join(x['field_name'] + ' - ' + x['farm_name'])
-        ).reset_index(name='info')
+            # Ordenar el DataFrame por el campo de orden antes de crear el gráfico de Gantt
+            filtered_df = filtered_df.sort_values(by='order')
 
-        # Combinar la información agrupada con el DataFrame original
-        filtered_df = pd.merge(filtered_df, grouped, on=[selected_value, 'crop_date'])
+            # Agrupar por 'selected_value' y fecha, concatenando los nombres de lotes y establecimientos
+            grouped = filtered_df.groupby([selected_value, 'crop_date']).apply(
+                lambda x: ' | '.join(x['field_name'] + ' - ' + x['farm_name'])
+            ).reset_index(name='info')
 
-        # Crear el gráfico de Gantt
-        fig = px.timeline(
-            filtered_df,
-            x_start='start_date',
-            x_end='end_date',
-            y=selected_value,
-            color=selected_value,
-            labels={'crop_date': translate('seeding_date', lang), selected_value: selected_key},
-            height=600,
-            color_discrete_sequence=selected_colors
-        )
+            # Combinar la información agrupada con el DataFrame original
+            filtered_df = pd.merge(filtered_df, grouped, on=[selected_value, 'crop_date'])
 
-        # Añadir líneas verticales para cada cambio de año
-        years = filtered_df['crop_date'].dt.year.unique()
-        for year in years:
-            fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
-            for month in [2,3,4,5,6,7,8,9,10,11,12]:
-                fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
+            # Crear el gráfico de Gantt
+            fig = px.timeline(
+                filtered_df,
+                x_start='start_date',
+                x_end='end_date',
+                y=selected_value,
+                color=selected_value,
+                labels={'crop_date': translate('seeding_date', lang), selected_value: selected_key},
+                height=600,
+                color_discrete_sequence=selected_colors
+            )
 
-        # Configurar el formato y diseño del gráfico
-        fig.update_layout(
-            font=dict(family="Roboto", size=16),
-            xaxis_title=translate('seeding_date', lang),
-            yaxis_title=selected_key,
-            xaxis=dict(type='date'),
-            yaxis=dict(showgrid=True)
-        )
+            # Añadir líneas verticales para cada cambio de año
+            years = filtered_df['crop_date'].dt.year.unique()
+            for year in years:
+                fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
+                for month in [2,3,4,5,6,7,8,9,10,11,12]:
+                    fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
 
-        # Configurar el hovertemplate para mostrar la información de lotes y establecimientos
-        fig.update_traces(hovertemplate="%{y}<br>%{x}<br><br>%{customdata[0]}")
-        fig.update_traces(customdata=filtered_df[['info']])
+            # Configurar el formato y diseño del gráfico
+            fig.update_layout(
+                font=dict(family="Roboto", size=16),
+                xaxis_title=translate('seeding_date', lang),
+                yaxis_title=selected_key,
+                xaxis=dict(type='date'),
+                yaxis=dict(showgrid=True)
+            )
 
-        # Mostrar el gráfico en Streamlit
-        st.plotly_chart(fig, use_container_width=True)
+            # Configurar el hovertemplate para mostrar la información de lotes y establecimientos
+            fig.update_traces(hovertemplate="%{y}<br>%{x}<br><br>%{customdata[0]}")
+            fig.update_traces(customdata=filtered_df[['info']])
 
+            # Mostrar el gráfico en Streamlit
+            st.plotly_chart(fig, use_container_width=True)
 
         ############################################################################
         # descarga de csv
