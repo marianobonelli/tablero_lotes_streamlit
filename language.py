@@ -1,5 +1,5 @@
 translate_dict = {
-    "accumulated_hectares": {"en": "Accumulated Hectares","es": "Hectáreas Acumuladas","pt": "Hectares Acumulados"},
+    "accumulated_hectares": {"en": "Accumulated hectares","es": "Hectáreas acumuladas","pt": "Hectares acumulados"},
     "area": {"en": "Area", "es": "Área", "pt": "Área"},
     "choose_option": {"en": "Choose an option", "es": "Elije una opción", "pt": "Escolha uma opção"},
     "color_palette": {"en": "Color Palette", "es": "Paleta de colores", "pt": "Paleta de Cores"},
