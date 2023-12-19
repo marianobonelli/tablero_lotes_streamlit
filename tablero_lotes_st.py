@@ -106,6 +106,10 @@ with st.sidebar:
     # Area
     ############################################################################
 
+    # Reemplaza valores en blanco o nulos en 'area_name' por '--'
+    filtered_df['area_name'].fillna('--', inplace=True)
+
+    # Luego continúa con el proceso como antes
     areas = sorted(filtered_df['area_name'].unique().tolist())
 
     container = st.container()
@@ -120,7 +124,7 @@ with st.sidebar:
         selector_areas = container.multiselect(
             translate("area", lang),
             areas,
-            placeholder=translate("choose_option", lang)) 
+            placeholder=translate("choose_option", lang))
 
     ############################################################################
     # Workspace
