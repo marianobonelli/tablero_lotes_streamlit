@@ -712,7 +712,7 @@ if selector_hibrido:
                     legend=dict(
                         orientation="h",
                         yanchor="top",
-                        y=-0.2,  # Ajusta este valor para bajar la leyenda y que no tape las referencias del eje X
+                        y=-0.25,  # Ajusta este valor para bajar la leyenda y que no tape las referencias del eje X
                         xanchor="center",
                         x=0.5
                     )
