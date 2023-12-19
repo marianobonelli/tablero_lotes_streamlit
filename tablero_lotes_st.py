@@ -380,269 +380,310 @@ if selector_hibrido:
     # Ordenar el DataFrame primero por farm_name y luego por Rendimiento medio ajustado
     filtered_df = filtered_df.sort_values(by='hectares', ascending=False)
 
-    # Agrupar el DataFrame por el valor seleccionado y sumar las hectáreas
-    grouped_df = filtered_df.groupby(selected_value)['hectares'].sum().reset_index()
+    ####
+    from streamlit_extras.mandatory_date_range import date_range_picker
 
-    # Ordenar el DataFrame agrupado por hectáreas en orden descendente
-    grouped_df = grouped_df.sort_values(by='hectares', ascending=False)
+    # Asegúrate de que 'crop_date' está en formato datetime
+    filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'], errors='coerce')
 
-    ############################################################################
-    # Gráfico de torta
-    ############################################################################
+    # Organizar los widgets en dos columnas
+    col1, col2 = st.columns([2, 1])
 
-    st.markdown('')
-    st.markdown(f"<b>{translate('hectares_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
+    # Opción para incluir/excluir/solo sin fecha asignada
+    date_option = col2.selectbox(translate("fields_without_sowing_date", lang), 
+                                [translate("include", lang), translate("exclude", lang), translate("only_no_date", lang)])
 
-    # Crear un gráfico de torta con Plotly Express
-    pie_fig = px.pie(
-        grouped_df,
-        names=selected_value,  # Usa el valor seleccionado como etiquetas
-        values='hectares',     # Usa las hectáreas como valores
-        color=selected_value,  # Colorea según el valor seleccionado
-        color_discrete_sequence=selected_colors  # Utiliza la misma paleta de colores
-    )
+    # Determinar el rango de fechas disponible
+    min_date = filtered_df['crop_date'].min()
+    max_date = filtered_df['crop_date'].max()
 
-    # Crear el hovertemplate personalizado
-    hovertemplate = (
-        f"<b>%{{label}}</b><br>"
-        f"{translate('hectares', lang)}: %{{value}}<br>"
-        f"Porcentaje: %{{percent:.2%}}"  # Multiplica por 100 y muestra como porcentaje
-    )
+    # Desactivar el selector de fechas si se selecciona 'Solo Sin Fecha'
+    date_input_disabled = date_option == translate("only_no_date", lang)
 
-    # Personalizar el gráfico de torta para que el texto quede por fuera
-    pie_fig.update_traces(
-        textinfo='percent+label',
-        textposition='outside',
-        outsidetextfont=dict(family="Roboto", size=12),
-        pull=0.02,
-        texttemplate='%{label} %{percent:.2%}',  # Multiplica por 100 para mostrar el porcentaje correctamente
-        hovertemplate=hovertemplate
-    )
+    with col1:
+        # Si hay fechas válidas, muestra el selector de rango de fechas
+        if pd.notnull(min_date) and pd.notnull(max_date) and not date_input_disabled:
+            selected_date_range = date_range_picker(translate("select_date_range", lang),
+                                                    default_start=min_date.date() if min_date else None,
+                                                    default_end=max_date.date() if max_date else None, 
+                                                    min_date=min_date.date() if min_date else None, 
+                                                    max_date=max_date.date() if max_date else None,
+                                                    error_message=translate("error_message_date_picker", lang) 
+                                                    )
+            start_date, end_date = [pd.Timestamp(date) for date in selected_date_range]
+        elif date_input_disabled:
+            start_date, end_date = min_date, max_date
 
-    pie_fig.update_layout(
-        font=dict(family="Roboto", size=18)
+    # Aplicar filtro basado en la selección de fecha y el rango de fechas seleccionado
+    if date_option == translate("include", lang):
+        filtered_df = filtered_df[(filtered_df['crop_date'] >= start_date) & 
+                                (filtered_df['crop_date'] <= end_date) | 
+                                filtered_df['crop_date'].isna()]
+    elif date_option == translate("exclude", lang):
+        filtered_df = filtered_df[(filtered_df['crop_date'] >= start_date) & 
+                                (filtered_df['crop_date'] <= end_date)]
+    elif date_option == translate("only_no_date", lang):
+        filtered_df = filtered_df[filtered_df['crop_date'].isna()]
+
+
+    #
+        
+    # Comprobar si filtered_df está vacío
+    if filtered_df.empty:
+        st.warning(translate("select_warning", lang))
+    else:
+
+        # Agrupar el DataFrame por el valor seleccionado y sumar las hectáreas
+        grouped_df = filtered_df.groupby(selected_value)['hectares'].sum().reset_index()
+
+        # Ordenar el DataFrame agrupado por hectáreas en orden descendente
+        grouped_df = grouped_df.sort_values(by='hectares', ascending=False)
+
+        ############################################################################
+        # Gráfico de torta
+        ############################################################################
+
+        st.markdown('')
+        st.markdown(f"<b>{translate('hectares_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
+
+        # Crear un gráfico de torta con Plotly Express
+        pie_fig = px.pie(
+            grouped_df,
+            names=selected_value,  # Usa el valor seleccionado como etiquetas
+            values='hectares',     # Usa las hectáreas como valores
+            color=selected_value,  # Colorea según el valor seleccionado
+            color_discrete_sequence=selected_colors  # Utiliza la misma paleta de colores
         )
 
-    # Mostrar el gráfico de torta en Streamlit
-    st.plotly_chart(pie_fig, use_container_width=True)
-
-    ############################################################################
-    # Gráfico de barras
-    ############################################################################
-
-    st.markdown('')
-    st.markdown(f"<b>{translate('hectares_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
-
-    # Crear un gráfico de barras interactivo con Plotly
-    fig = px.bar(
-        grouped_df,
-        x=selected_value,  # Usa el valor seleccionado como eje X
-        y='hectares',      # Hectáreas como eje Y
-        color=selected_value,
-        labels={selected_value: selected_key, 'hectares': translate('hectares', lang)},
-        height=500,
-        color_discrete_sequence=selected_colors  # Aquí se actualiza la paleta de colores
-    )
-
-    # Crear el hovertemplate personalizado
-    hovertemplate = (
-        f"<b>%{{x}}</b><br>"
-        f"{translate('hectares', lang)}: %{{y:.2f}}<br>"
-    )
-
-    # Aplicar el hovertemplate y datos personalizados al gráfico
-    fig.update_traces(hovertemplate=hovertemplate)
-
-    # Personalizar la fuente del hoverlabel
-    fig.update_layout(
-        hoverlabel=dict(
-            bgcolor="white", # color de fondo del hoverlabel
-            font_size=12, # tamaño de la fuente
-            font_family="Roboto" # tipo de fuente
+        # Crear el hovertemplate personalizado
+        hovertemplate = (
+            f"<b>%{{label}}</b><br>"
+            f"{translate('hectares', lang)}: %{{value}}<br>"
+            f"Porcentaje: %{{percent:.2%}}"  # Multiplica por 100 y muestra como porcentaje
         )
-    )
 
-    # Personalizar el tipo de fuente del gráfico
-    fig.update_layout(
-        font=dict(
-            family="Roboto",  # Cambia 'Arial' a cualquier tipo de fuente que desees usar
-            size=18,  # Cambia el tamaño de la fuente
+        # Personalizar el gráfico de torta para que el texto quede por fuera
+        pie_fig.update_traces(
+            textinfo='percent+label',
+            textposition='outside',
+            outsidetextfont=dict(family="Roboto", size=12),
+            pull=0.02,
+            texttemplate='%{label} %{percent:.2%}',  # Multiplica por 100 para mostrar el porcentaje correctamente
+            hovertemplate=hovertemplate
         )
-    )
-    
-    # Personalizar el diseño del gráfico
-    fig.update_xaxes(title_text=selected_key)
-    fig.update_yaxes(title_text=translate("hectares", lang))
-    fig.update_layout(xaxis_tickangle=-45)
 
-    # Mostrar el gráfico en Streamlit
-    st.plotly_chart(fig, use_container_width=True)
-
-    ############################################################################
-    # mapa
-    ############################################################################
-
-    # Calcular la suma total de hectáreas para cada valor de 'selected_value' y crear un campo de orden
-    hectares_order = filtered_df.groupby(selected_value)['hectares'].sum().sort_values(ascending=False).reset_index()
-    hectares_order['order'] = range(1, len(hectares_order) + 1)
-
-    # Unir esta información con el DataFrame original para añadir el campo de orden
-    filtered_df = pd.merge(filtered_df, hectares_order[[selected_value, 'order']], on=selected_value, how='left')
-
-    # Mapear los colores del gráfico a los valores únicos de la columna de orden
-    colors = selected_colors
-    color_map = {val: colors[i % len(colors)] for i, val in enumerate(hectares_order['order'])}
-    filtered_df['color'] = filtered_df['order'].map(color_map)
-
-    # Convertir la columna 'centroid' a objetos de geometría
-    filtered_df['geometry'] = filtered_df['centroid'].apply(wkt.loads)
-    gdf = gpd.GeoDataFrame(filtered_df, geometry='geometry')
-
-    st.markdown('')
-    st.markdown(f"<b>{translate('point_map_by_field_according_to', lang)} {selected_key}</b>", unsafe_allow_html=True)
-
-    # Crear mapa
-    m = folium.Map(location=[gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()], zoom_start=7)
-    feature_groups = {}
-
-    # Preparar los datos para el heatmap
-    heat_data = [[row.geometry.y, row.geometry.x, row['hectares']] for idx, row in gdf.iterrows()]
-
-    for group_name in grouped_df[selected_value]:
-        for idx, row in filtered_df[filtered_df[selected_value] == group_name].iterrows():
-            group_name = row[selected_value]
-            if group_name not in feature_groups:
-                feature_groups[group_name] = FeatureGroup(name=str(group_name))
-
-            marker = folium.CircleMarker(
-                location=[row.geometry.y, row.geometry.x],
-                radius=7,
-                color=row['color'],
-                fill=True,
-                fill_opacity=0.8,
-                fill_color=row['color'],
-                tooltip=(
-                    "<span style='font-family:Roboto;'>"
-                    f"{translate('area', lang)}: {row['area_name']}<br>"
-                    f"{translate('workspace', lang)}: {row['workspace_name']}<br>"
-                    f"{translate('season', lang)}: {row['season_name']}<br>"
-                    f"{translate('farm', lang)}: {row['farm_name']}<br>"
-                    f"{translate('field', lang)}: {row['field_name']}<br>"
-                    f"{translate('crop', lang)}: {row['crop']}<br>"
-                    f"{translate('hybrid_variety', lang)}: {row['hybrid']}<br>"
-                    f"{translate('seeding_date', lang)}: {row['crop_date']}<br>"
-                    f"{translate('hectares', lang)}: {row['hectares']}<br>"
-                    "</span>")
+        pie_fig.update_layout(
+            font=dict(family="Roboto", size=18)
             )
-            marker.add_to(feature_groups[group_name])
 
-    for group_name, feature_group in feature_groups.items():
-        feature_group.add_to(m)
+        # Mostrar el gráfico de torta en Streamlit
+        st.plotly_chart(pie_fig, use_container_width=True)
 
-    # Agregar heatmap al mapa como un layer adicional
-    heatmap_feature_group = FeatureGroup(name=translate('heatmap', lang), show=False)
-    HeatMap(heat_data).add_to(heatmap_feature_group)
-    heatmap_feature_group.add_to(m)
+        ############################################################################
+        # Gráfico de barras
+        ############################################################################
 
-    # Agrega la capa de teselas de Esri World Imagery
-    tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-    attr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    folium.TileLayer(tiles, attr=attr, name='Esri World Imagery', show=True).add_to(m)
+        st.markdown('')
+        st.markdown(f"<b>{translate('hectares_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
-    LayerControl(collapsed=True).add_to(m)
+        # Crear un gráfico de barras interactivo con Plotly
+        fig = px.bar(
+            grouped_df,
+            x=selected_value,  # Usa el valor seleccionado como eje X
+            y='hectares',      # Hectáreas como eje Y
+            color=selected_value,
+            labels={selected_value: selected_key, 'hectares': translate('hectares', lang)},
+            height=500,
+            color_discrete_sequence=selected_colors  # Aquí se actualiza la paleta de colores
+        )
 
-    # m.save("map.html")
-    folium_static(m, width=900)
+        # Crear el hovertemplate personalizado
+        hovertemplate = (
+            f"<b>%{{x}}</b><br>"
+            f"{translate('hectares', lang)}: %{{y:.2f}}<br>"
+        )
 
-    ############################################################################
-    # timeline
-    ############################################################################
+        # Aplicar el hovertemplate y datos personalizados al gráfico
+        fig.update_traces(hovertemplate=hovertemplate)
 
-    st.markdown('')
-    st.markdown(f"<b>{translate('seeding_date_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
+        # Personalizar la fuente del hoverlabel
+        fig.update_layout(
+            hoverlabel=dict(
+                bgcolor="white", # color de fondo del hoverlabel
+                font_size=12, # tamaño de la fuente
+                font_family="Roboto" # tipo de fuente
+            )
+        )
 
-    # Convertir la fecha de siembra a tipo datetime y crear columnas de inicio y fin
-    filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
-    filtered_df['start_date'] = filtered_df['crop_date']
-    filtered_df['end_date'] = filtered_df['crop_date'] + pd.Timedelta(days=1)
+        # Personalizar el tipo de fuente del gráfico
+        fig.update_layout(
+            font=dict(
+                family="Roboto",  # Cambia 'Arial' a cualquier tipo de fuente que desees usar
+                size=18,  # Cambia el tamaño de la fuente
+            )
+        )
+        
+        # Personalizar el diseño del gráfico
+        fig.update_xaxes(title_text=selected_key)
+        fig.update_yaxes(title_text=translate("hectares", lang))
+        fig.update_layout(xaxis_tickangle=-45)
 
-    # Ordenar el DataFrame por el campo de orden antes de crear el gráfico de Gantt
-    filtered_df = filtered_df.sort_values(by='order')
+        # Mostrar el gráfico en Streamlit
+        st.plotly_chart(fig, use_container_width=True)
 
-    # Agrupar por 'selected_value' y fecha, concatenando los nombres de lotes y establecimientos
-    grouped = filtered_df.groupby([selected_value, 'crop_date']).apply(
-        lambda x: ' | '.join(x['field_name'] + ' - ' + x['farm_name'])
-    ).reset_index(name='info')
+        ############################################################################
+        # mapa
+        ############################################################################
 
-    # Combinar la información agrupada con el DataFrame original
-    filtered_df = pd.merge(filtered_df, grouped, on=[selected_value, 'crop_date'])
+        # Calcular la suma total de hectáreas para cada valor de 'selected_value' y crear un campo de orden
+        hectares_order = filtered_df.groupby(selected_value)['hectares'].sum().sort_values(ascending=False).reset_index()
+        hectares_order['order'] = range(1, len(hectares_order) + 1)
 
-    # Crear el gráfico de Gantt
-    fig = px.timeline(
-        filtered_df,
-        x_start='start_date',
-        x_end='end_date',
-        y=selected_value,
-        color=selected_value,
-        labels={'crop_date': translate('seeding_date', lang), selected_value: selected_key},
-        height=600,
-        color_discrete_sequence=selected_colors
-    )
+        # Unir esta información con el DataFrame original para añadir el campo de orden
+        filtered_df = pd.merge(filtered_df, hectares_order[[selected_value, 'order']], on=selected_value, how='left')
 
-    # Añadir líneas verticales para cada cambio de año
-    years = filtered_df['crop_date'].dt.year.unique()
-    for year in years:
-        fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
-        for month in [2,3,4,5,6,7,8,9,10,11,12]:
-            fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
+        # Mapear los colores del gráfico a los valores únicos de la columna de orden
+        colors = selected_colors
+        color_map = {val: colors[i % len(colors)] for i, val in enumerate(hectares_order['order'])}
+        filtered_df['color'] = filtered_df['order'].map(color_map)
 
-    # Configurar el formato y diseño del gráfico
-    fig.update_layout(
-        font=dict(family="Roboto", size=16),
-        xaxis_title=translate('seeding_date', lang),
-        yaxis_title=selected_key,
-        xaxis=dict(type='date'),
-        yaxis=dict(showgrid=True)
-    )
+        # Convertir la columna 'centroid' a objetos de geometría
+        filtered_df['geometry'] = filtered_df['centroid'].apply(wkt.loads)
+        gdf = gpd.GeoDataFrame(filtered_df, geometry='geometry')
 
-    # Configurar el hovertemplate para mostrar la información de lotes y establecimientos
-    fig.update_traces(hovertemplate="%{y}<br>%{x}<br><br>%{customdata[0]}")
-    fig.update_traces(customdata=filtered_df[['info']])
+        st.markdown('')
+        st.markdown(f"<b>{translate('point_map_by_field_according_to', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
-    # Mostrar el gráfico en Streamlit
-    st.plotly_chart(fig, use_container_width=True)
+        # Crear mapa
+        m = folium.Map(location=[gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()], zoom_start=7)
+        feature_groups = {}
+
+        # Preparar los datos para el heatmap
+        heat_data = [[row.geometry.y, row.geometry.x, row['hectares']] for idx, row in gdf.iterrows()]
+
+        for group_name in grouped_df[selected_value]:
+            for idx, row in filtered_df[filtered_df[selected_value] == group_name].iterrows():
+                group_name = row[selected_value]
+                if group_name not in feature_groups:
+                    feature_groups[group_name] = FeatureGroup(name=str(group_name))
+
+                marker = folium.CircleMarker(
+                    location=[row.geometry.y, row.geometry.x],
+                    radius=7,
+                    color=row['color'],
+                    fill=True,
+                    fill_opacity=0.8,
+                    fill_color=row['color'],
+                    tooltip=(
+                        "<span style='font-family:Roboto;'>"
+                        f"{translate('area', lang)}: {row['area_name']}<br>"
+                        f"{translate('workspace', lang)}: {row['workspace_name']}<br>"
+                        f"{translate('season', lang)}: {row['season_name']}<br>"
+                        f"{translate('farm', lang)}: {row['farm_name']}<br>"
+                        f"{translate('field', lang)}: {row['field_name']}<br>"
+                        f"{translate('crop', lang)}: {row['crop']}<br>"
+                        f"{translate('hybrid_variety', lang)}: {row['hybrid']}<br>"
+                        f"{translate('seeding_date', lang)}: {row['crop_date']}<br>"
+                        f"{translate('hectares', lang)}: {row['hectares']}<br>"
+                        "</span>")
+                )
+                marker.add_to(feature_groups[group_name])
+
+        for group_name, feature_group in feature_groups.items():
+            feature_group.add_to(m)
+
+        # Agregar heatmap al mapa como un layer adicional
+        heatmap_feature_group = FeatureGroup(name=translate('heatmap', lang), show=False)
+        HeatMap(heat_data).add_to(heatmap_feature_group)
+        heatmap_feature_group.add_to(m)
+
+        # Agrega la capa de teselas de Esri World Imagery
+        tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+        attr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        folium.TileLayer(tiles, attr=attr, name='Esri World Imagery', show=True).add_to(m)
+
+        LayerControl(collapsed=True).add_to(m)
+
+        # m.save("map.html")
+        folium_static(m, width=900)
+
+        ############################################################################
+        # timeline
+        ############################################################################
+
+        st.markdown('')
+        st.markdown(f"<b>{translate('seeding_date_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
+
+        # Convertir la fecha de siembra a tipo datetime y crear columnas de inicio y fin
+        filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
+        filtered_df['start_date'] = filtered_df['crop_date']
+        filtered_df['end_date'] = filtered_df['crop_date'] + pd.Timedelta(days=1)
+
+        # Ordenar el DataFrame por el campo de orden antes de crear el gráfico de Gantt
+        filtered_df = filtered_df.sort_values(by='order')
+
+        # Agrupar por 'selected_value' y fecha, concatenando los nombres de lotes y establecimientos
+        grouped = filtered_df.groupby([selected_value, 'crop_date']).apply(
+            lambda x: ' | '.join(x['field_name'] + ' - ' + x['farm_name'])
+        ).reset_index(name='info')
+
+        # Combinar la información agrupada con el DataFrame original
+        filtered_df = pd.merge(filtered_df, grouped, on=[selected_value, 'crop_date'])
+
+        # Crear el gráfico de Gantt
+        fig = px.timeline(
+            filtered_df,
+            x_start='start_date',
+            x_end='end_date',
+            y=selected_value,
+            color=selected_value,
+            labels={'crop_date': translate('seeding_date', lang), selected_value: selected_key},
+            height=600,
+            color_discrete_sequence=selected_colors
+        )
+
+        # Añadir líneas verticales para cada cambio de año
+        years = filtered_df['crop_date'].dt.year.unique()
+        for year in years:
+            fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
+            for month in [2,3,4,5,6,7,8,9,10,11,12]:
+                fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
+
+        # Configurar el formato y diseño del gráfico
+        fig.update_layout(
+            font=dict(family="Roboto", size=16),
+            xaxis_title=translate('seeding_date', lang),
+            yaxis_title=selected_key,
+            xaxis=dict(type='date'),
+            yaxis=dict(showgrid=True)
+        )
+
+        # Configurar el hovertemplate para mostrar la información de lotes y establecimientos
+        fig.update_traces(hovertemplate="%{y}<br>%{x}<br><br>%{customdata[0]}")
+        fig.update_traces(customdata=filtered_df[['info']])
+
+        # Mostrar el gráfico en Streamlit
+        st.plotly_chart(fig, use_container_width=True)
 
 
-    ############################################################################
-    # descarga de csv
-    ############################################################################
-    # Convertir DataFrame a CSV
-    # csv = filtered_df.to_csv(index=False)
+        ############################################################################
+        # descarga de csv
+        ############################################################################
+        # Convertir DataFrame a CSV
+        # csv = filtered_df.to_csv(index=False)
 
-    st.download_button(
-        label=translate('download_csv', lang),
-        data=marca_blanca,
-        file_name=translate('title', lang) + ".csv",
-        mime='text/csv',
-    )
+        st.download_button(
+            label=translate('download_csv', lang),
+            data=marca_blanca,
+            file_name=translate('title', lang) + ".csv",
+            mime='text/csv',
+        )
 
 ############################################################################
 # advertencia
 ############################################################################
 
 else:
-    # Diccionario de referencia
-    messages = {
-        "select_warning": {
-            "es": "Debe seleccionar un cultivo para continuar",
-            "en": "You must select a crop to continue",
-            "pt": "Você deve selecionar um cultivo para continuar"
-        }
-    }
-
-    # Usar el valor de 'lang' para determinar el mensaje de advertencia
-    if lang in messages["select_warning"]:
-        advertencia = messages["select_warning"][lang]
-        st.warning(advertencia)
+    st.warning(translate("select_warning", lang))
 
 st.caption("Powered by GeoAgro")
