@@ -1,4 +1,5 @@
 translate_dict = {
+    "accumulated_hectares": {"en": "Accumulated Hectares","es": "Hectáreas Acumuladas","pt": "Hectares Acumulados"},
     "area": {"en": "Area", "es": "Área", "pt": "Área"},
     "choose_option": {"en": "Choose an option", "es": "Elije una opción", "pt": "Escolha uma opção"},
     "color_palette": {"en": "Color Palette", "es": "Paleta de colores", "pt": "Paleta de Cores"},
@@ -17,6 +18,7 @@ translate_dict = {
     "heatmap": {"en": "Heatmap by Hectares", "es": "Heatmap por Hectáreas", "pt": "Heatmap por Hectares"},
     "hectares": {"en": "Hectares", "es": "Hectáreas", "pt": "Hectares"},
     "hectares_by": {"en": "Hectares by", "es": "Hectáreas por", "pt": "Hectares por"},
+    "hectares_per_date": {"en": "Hectares per seeding date","es": "Hectáreas por fecha de siembra","pt": "Hectares por data de semeadura"},
     "hybrid_varieties": {"en": "Hybrids / Varieties", "es": "Híbridos / Variedades", "pt": "Híbridos / Variedades"},
     "hybrid_variety": {"en": "Hybrid / Variety", "es": "Híbrido / Variedad", "pt": "Híbrido / Variedade"},
     "include": {"en": "Include","es": "Incluir","pt": "Incluir"},

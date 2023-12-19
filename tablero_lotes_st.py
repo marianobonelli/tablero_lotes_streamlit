@@ -6,6 +6,7 @@ from shapely import wkt
 # Importar bibliotecas para visualización
 import plotly.express as px
 import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 import folium
 from folium import FeatureGroup, LayerControl
 from folium.plugins import HeatMap
@@ -621,56 +622,111 @@ if selector_hibrido:
             st.markdown('')
             st.markdown(f"<b>{translate('seeding_date_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
-            # Convertir la fecha de siembra a tipo datetime y crear columnas de inicio y fin
-            filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
-            filtered_df['start_date'] = filtered_df['crop_date']
-            filtered_df['end_date'] = filtered_df['crop_date'] + pd.Timedelta(days=1)
+            tab1, tab2 = st.tabs([translate('seeding_date', lang), translate('hectares_per_date', lang)])
 
-            # Ordenar el DataFrame por el campo de orden antes de crear el gráfico de Gantt
-            filtered_df = filtered_df.sort_values(by='order')
+            with tab1:
+                # Convertir la fecha de siembra a tipo datetime y crear columnas de inicio y fin
+                filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
+                filtered_df['start_date'] = filtered_df['crop_date']
+                filtered_df['end_date'] = filtered_df['crop_date'] + pd.Timedelta(days=1)
 
-            # Agrupar por 'selected_value' y fecha, concatenando los nombres de lotes y establecimientos
-            grouped = filtered_df.groupby([selected_value, 'crop_date']).apply(
-                lambda x: ' | '.join(x['field_name'] + ' - ' + x['farm_name'])
-            ).reset_index(name='info')
+                # Ordenar el DataFrame por el campo de orden antes de crear el gráfico de Gantt
+                filtered_df = filtered_df.sort_values(by='order')
 
-            # Combinar la información agrupada con el DataFrame original
-            filtered_df = pd.merge(filtered_df, grouped, on=[selected_value, 'crop_date'])
+                # Agrupar por 'selected_value' y fecha, concatenando los nombres de lotes y establecimientos
+                grouped = filtered_df.groupby([selected_value, 'crop_date']).apply(
+                    lambda x: ' | '.join(x['field_name'] + ' - ' + x['farm_name'])
+                ).reset_index(name='info')
 
-            # Crear el gráfico de Gantt
-            fig = px.timeline(
-                filtered_df,
-                x_start='start_date',
-                x_end='end_date',
-                y=selected_value,
-                color=selected_value,
-                labels={'crop_date': translate('seeding_date', lang), selected_value: selected_key},
-                height=600,
-                color_discrete_sequence=selected_colors
-            )
+                # Combinar la información agrupada con el DataFrame original
+                filtered_df = pd.merge(filtered_df, grouped, on=[selected_value, 'crop_date'])
 
-            # Añadir líneas verticales para cada cambio de año
-            years = filtered_df['crop_date'].dt.year.unique()
-            for year in years:
-                fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
-                for month in [2,3,4,5,6,7,8,9,10,11,12]:
-                    fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
+                # Crear el gráfico de Gantt
+                fig = px.timeline(
+                    filtered_df,
+                    x_start='start_date',
+                    x_end='end_date',
+                    y=selected_value,
+                    color=selected_value,
+                    labels={'crop_date': translate('seeding_date', lang), selected_value: selected_key},
+                    height=600,
+                    color_discrete_sequence=selected_colors
+                )
 
-            # Configurar el formato y diseño del gráfico
-            fig.update_layout(
-                font=dict(family="Roboto", size=16),
-                xaxis_title=translate('seeding_date', lang),
-                yaxis_title=selected_key,
-                xaxis=dict(type='date'),
-                yaxis=dict(showgrid=True)
-            )
+                # Añadir líneas verticales para cada cambio de año
+                years = filtered_df['crop_date'].dt.year.unique()
+                for year in years:
+                    fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
+                    for month in [2,3,4,5,6,7,8,9,10,11,12]:
+                        fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
 
-            # Configurar el hovertemplate para mostrar la información de lotes y establecimientos
-            fig.update_traces(hovertemplate="%{y}<br>%{x}<br><br>%{customdata[0]}")
-            fig.update_traces(customdata=filtered_df[['info']])
+                # Configurar el formato y diseño del gráfico
+                fig.update_layout(
+                    font=dict(family="Roboto", size=16),
+                    xaxis_title=translate('seeding_date', lang),
+                    yaxis_title=selected_key,
+                    xaxis=dict(type='date'),
+                    yaxis=dict(showgrid=True)
+                )
 
-            # Mostrar el gráfico en Streamlit
-            st.plotly_chart(fig, use_container_width=True)
+                # Configurar el hovertemplate para mostrar la información de lotes y establecimientos
+                fig.update_traces(hovertemplate="%{y}<br>%{x}<br><br>%{customdata[0]}")
+                fig.update_traces(customdata=filtered_df[['info']])
+
+                # Mostrar el gráfico en Streamlit
+                st.plotly_chart(fig, use_container_width=True)
+
+            with tab2:
+                                
+                # Permitir al usuario seleccionar un valor específico para el análisis
+                selected_analysis_value = st.selectbox(selected_key, filtered_df[selected_value].unique())
+
+                # Filtrar el DataFrame basado en el valor seleccionado
+                analysis_df = filtered_df[filtered_df[selected_value] == selected_analysis_value]
+
+                # Agrupar los datos por fecha para el gráfico de barras
+                bar_data = analysis_df.groupby('crop_date').agg({'hectares': 'sum'}).reset_index()
+
+                # Agrupar los datos por fecha y calcular el total acumulado de hectáreas para el gráfico de línea
+                line_data = analysis_df.groupby('crop_date').agg({'hectares': 'sum'}).cumsum().reset_index()
+
+                # Crear un gráfico de figura con ejes secundarios
+                fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+                # Agregar el gráfico de barras (hectáreas por fecha sin agrupar)
+                fig.add_trace(
+                    go.Bar(x=bar_data['crop_date'], y=bar_data['hectares'], name=translate('hectares_per_date', lang)),
+                    secondary_y=False,
+                )
+
+                # Agregar el gráfico de línea (total acumulado de hectáreas)
+                fig.add_trace(
+                    go.Scatter(x=line_data['crop_date'], y=line_data['hectares'], name=translate('accumulated_hectares', lang), mode='lines+markers'),
+                    secondary_y=True,
+                )
+
+                # Configurar títulos de ejes y diseño del gráfico
+                fig.update_layout(
+                    # title_text=f"{translate('hectares_analysis', lang)}: {selected_analysis_value}",
+                    font=dict(family="Roboto", size=16),
+                    legend=dict(
+                        orientation="h",
+                        yanchor="top",
+                        y=-0.2,  # Ajusta este valor para bajar la leyenda y que no tape las referencias del eje X
+                        xanchor="center",
+                        x=0.5
+                    )
+                )
+
+                fig.update_xaxes(title_text=translate('seeding_date', lang))
+                fig.update_yaxes(title_text=translate('hectares_per_date', lang), secondary_y=False)
+                fig.update_yaxes(title_text=translate('accumulated_hectares', lang), secondary_y=True)
+
+                # Mostrar el gráfico en Streamlit
+                st.plotly_chart(fig, use_container_width=True)
+
+
+
 
         ############################################################################
         # descarga de csv
