@@ -31,6 +31,7 @@ translate_dict = {
     "season": {"en": "Season", "es": "Campaña", "pt": "Temporada"},
     "seeding_date": {"en": "Seeding Date", "es": "Fecha de siembra", "pt": "Data de Semeadura"},
     "seeding_date_by": {"en": "Seeding Date by ", "es": "Fecha de siembra por ", "pt": "Data de Semeadura por "},
+    "seeding_progress": {"en": "Seeding progress", "es": "Avance de siembra", "pt": "Progresso da semeadura"},
     "select_all": {"en": "Select all", "es": "Seleccionar todo", "pt": "Selecionar tudo"},
     "select_date_range": {"en": "Select Date Range:", "es": "Seleccionar Rango de Fechas:", "pt": "Selecionar Intervalo de Datas:"},
     "select_grouping_field": {"en": "Select a grouping field:", "es": "Seleccione un campo de agrupamiento:", "pt": "Selecione um campo de agrupamento:"},

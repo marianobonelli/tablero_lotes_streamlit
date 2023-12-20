@@ -421,15 +421,16 @@ if selector_hibrido:
 
     # Aplicar filtro basado en la selección de fecha y el rango de fechas seleccionado
     if date_option == translate("include", lang):
+        df_original = filtered_df
         filtered_df = filtered_df[(filtered_df['crop_date'] >= start_date) & 
                                 (filtered_df['crop_date'] <= end_date) | 
                                 filtered_df['crop_date'].isna()]
     elif date_option == translate("exclude", lang):
+        df_original = filtered_df
         filtered_df = filtered_df[(filtered_df['crop_date'] >= start_date) & 
                                 (filtered_df['crop_date'] <= end_date)]
     elif date_option == translate("only_no_date", lang):
         filtered_df = filtered_df[filtered_df['crop_date'].isna()]
-
 
     #
         
@@ -625,6 +626,7 @@ if selector_hibrido:
             tab1, tab2 = st.tabs([translate('seeding_date', lang), translate('hectares_per_date', lang)])
 
             with tab1:
+
                 # Convertir la fecha de siembra a tipo datetime y crear columnas de inicio y fin
                 filtered_df['crop_date'] = pd.to_datetime(filtered_df['crop_date'])
                 filtered_df['start_date'] = filtered_df['crop_date']
@@ -641,48 +643,113 @@ if selector_hibrido:
                 # Combinar la información agrupada con el DataFrame original
                 filtered_df = pd.merge(filtered_df, grouped, on=[selected_value, 'crop_date'])
 
-                # Crear el gráfico de Gantt
-                fig = px.timeline(
-                    filtered_df,
-                    x_start='start_date',
-                    x_end='end_date',
-                    y=selected_value,
-                    color=selected_value,
-                    labels={'crop_date': translate('seeding_date', lang), selected_value: selected_key},
-                    height=600,
-                    color_discrete_sequence=selected_colors
-                )
 
-                # Añadir líneas verticales para cada cambio de año
-                years = filtered_df['crop_date'].dt.year.unique()
-                for year in years:
-                    fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
-                    for month in [2,3,4,5,6,7,8,9,10,11,12]:
-                        fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
+                # Crear dos columnas, la primera de un cuarto y la segunda de tres cuartos
+                col1, col2 = st.columns([4, 1])
 
-                # Configurar el formato y diseño del gráfico
-                fig.update_layout(
-                    font=dict(family="Roboto", size=16),
-                    xaxis_title=translate('seeding_date', lang),
-                    yaxis_title=selected_key,
-                    xaxis=dict(type='date'),
-                    yaxis=dict(showgrid=True)
-                )
+                with col1:
 
-                # Configurar el hovertemplate para mostrar la información de lotes y establecimientos
-                fig.update_traces(hovertemplate="%{y}<br>%{x}<br><br>%{customdata[0]}")
-                fig.update_traces(customdata=filtered_df[['info']])
+                    # Crear el gráfico de Gantt
+                    fig = px.timeline(
+                        filtered_df,
+                        x_start='start_date',
+                        x_end='end_date',
+                        y=selected_value,
+                        color=selected_value,
+                        labels={'crop_date': translate('seeding_date', lang), selected_value: selected_key},
+                        height=600,
+                        color_discrete_sequence=selected_colors
+                    )
 
-                # Mostrar el gráfico en Streamlit
-                st.plotly_chart(fig, use_container_width=True)
+                    # Añadir líneas verticales para cada cambio de año
+                    years = filtered_df['crop_date'].dt.year.unique()
+                    for year in years:
+                        fig.add_vline(x=pd.to_datetime(f'{year}-12-31'), line_width=0.5, line_dash="solid", line_color="grey")
+                        for month in [2,3,4,5,6,7,8,9,10,11,12]:
+                            fig.add_vline(x=pd.to_datetime(f'{year}-{month}-01'), line_width=0.05, line_dash="solid", line_color="grey")
+
+                    # Configurar el formato y diseño del gráfico
+                    fig.update_layout(
+                        font=dict(family="Roboto", size=16),
+                        xaxis_title=translate('seeding_date', lang),
+                        yaxis_title=selected_key,
+                        xaxis=dict(type='date'),
+                        yaxis=dict(showgrid=True)
+                    )
+
+                    # Configurar el hovertemplate para mostrar la información de lotes y establecimientos
+                    fig.update_traces(hovertemplate="%{y}<br>%{x}<br><br>%{customdata[0]}")
+                    fig.update_traces(customdata=filtered_df[['info']])
+
+                    fig.update_layout(showlegend=False)
+                    st.plotly_chart(fig, use_container_width=True)
+
+                with col2:
+
+                    # Asegurarte de que df_original esté agrupado por selected_value
+                    df_original_filtered = df_original.groupby(selected_value)
+                    # Calcular el total de hectáreas en df_original
+                    total_hectares_original = df_original_filtered['hectares'].sum()
+
+                    # Calcular el porcentaje de hectáreas sembradas para cada selected_value en filtered_df
+                    percentage_df = filtered_df.groupby(selected_value)['hectares'].sum() / total_hectares_original * 100
+
+                    # Eliminar valores con porcentaje igual a 0 y mantener el mismo orden que el gráfico de Gantt
+                    percentage_df = percentage_df[percentage_df > 0].reindex(filtered_df[selected_value].unique())
+
+                    # Crear un gráfico de barras horizontales para mostrar los porcentajes
+                    fig_bar = px.bar(percentage_df.reset_index(), x='hectares', y=selected_value, orientation='h',
+                                    color=selected_value, color_discrete_sequence=selected_colors)
+                    
+                    # Configurar el hovertemplate para mostrar la información deseada
+                    fig_bar.update_traces(hovertemplate="%{y}<br>%{x:.2f}%<br>") 
+
+                    # Añadir anotaciones de texto con los porcentajes
+                    for index, row in percentage_df.reset_index().iterrows():
+                        fig_bar.add_annotation(
+                            x=row['hectares'],
+                            y=row[selected_value],
+                            text=f"{row['hectares']:.1f}%",  # Formato de dos decimales para el porcentaje
+                            showarrow=False,
+                            font=dict(color='black'),
+                            xref="x",
+                            yref="y",
+                            xanchor="left",
+                            yanchor="middle"
+                        )
+
+                    fig_bar.update_layout(
+                        xaxis_title=translate('seeding_progress', lang) + ' %',
+                        yaxis=dict(showticklabels=False, title=''),  # Eliminar las referencias del eje Y
+                        showlegend=False,
+                        height=600  # Ajustar la altura aquí
+                    )
+                    st.plotly_chart(fig_bar, use_container_width=True, config={'displayModeBar': False})
 
             with tab2:
-                
-                # Permitir al usuario seleccionar un valor específico para el análisis
-                selected_analysis_value = st.selectbox(selected_key, filtered_df[selected_value].unique())
 
-                # Filtrar el DataFrame basado en el valor seleccionado
-                analysis_df = filtered_df[filtered_df[selected_value] == selected_analysis_value]
+                # Crear dos columnas, la primera ocupa dos tercios y la segunda un tercio
+                col1, col2 = st.columns([3,1])
+
+                with col1:                
+                    # Código existente para la selección y la creación del gráfico
+                    selected_analysis_value = st.selectbox(selected_key, filtered_df[selected_value].unique())
+                    # Filtrar el DataFrame basado en el valor seleccionado
+                    analysis_df = filtered_df[filtered_df[selected_value] == selected_analysis_value]
+                    df_original = df_original[df_original[selected_value] == selected_analysis_value]
+
+                with col2:
+                    # Calcular el porcentaje de hectáreas
+                    selected_hectares = analysis_df['hectares'].sum()
+                    total_hectares = df_original['hectares'].sum()
+                    percentage = (selected_hectares / total_hectares) * 100
+
+                    # Mostrar el métrico en la segunda columna
+                    st.metric(
+                        label = translate('seeding_progress', lang),
+                        value = f"{selected_hectares:,.2f} ha",
+                        delta = f"{percentage:.2f}%"
+                        )
 
                 # Agrupar los datos por fecha para el gráfico de barras
                 bar_data = analysis_df.groupby('crop_date').agg({'hectares': 'sum'}).reset_index()
