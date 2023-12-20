@@ -14,6 +14,7 @@ from folium.plugins import HeatMap
 # Importar bibliotecas para integración web y Streamlit
 import streamlit as st
 from streamlit_folium import folium_static
+from streamlit_folium import st_folium
 from streamlit_extras.metric_cards import style_metric_cards 
 
 # Importar bibliotecas para manejo de imágenes
@@ -624,7 +625,7 @@ if selector_hibrido:
         LayerControl(collapsed=True).add_to(m)
 
         # m.save("map.html")
-        folium_static(m, width=900)
+        st_folium(m, use_container_width=True)
 
         ############################################################################
         # timeline
