@@ -331,31 +331,44 @@ if selector_hibrido:
     # Lotes sin cultivo
     lotes_sin_cultivo = len(filtered_df[filtered_df['crop'] == '-No asignado-'])
     porcentaje_sin_cultivo = (lotes_sin_cultivo / total_lotes) * -100 if total_lotes > 0 else 0
+    # Redondear a cero si es muy cercano a cero
+    if abs(porcentaje_sin_cultivo) < 0.001:
+        porcentaje_sin_cultivo = 0
 
     col1.metric(
         translate("fields_without_crops", lang), 
         lotes_sin_cultivo, 
-        f"{porcentaje_sin_cultivo:.2f}%"
+        f"{porcentaje_sin_cultivo:.2f}%",
+        # delta_color = "off" if porcentaje_sin_cultivo == 0 else "normal"
+        
     )
 
     # Lotes sin híbrido
     lotes_sin_hibrido = len(filtered_df[filtered_df['hybrid'] == '-No asignado-'])
     porcentaje_sin_hibrido = (lotes_sin_hibrido / total_lotes) * -100 if total_lotes > 0 else 0
+    # Redondear a cero si es muy cercano a cero
+    if abs(porcentaje_sin_hibrido) < 0.001:
+        porcentaje_sin_hibrido = 0
 
     col2.metric(
         translate("fields_without_hybrids_or_varieties", lang), 
         lotes_sin_hibrido, 
-        f"{porcentaje_sin_hibrido:.2f}%"
+        f"{porcentaje_sin_hibrido:.2f}%",
+        # delta_color = "off" if porcentaje_sin_hibrido == 0 else "normal"
     )
 
     # Lotes sin fecha de siembra
     lotes_sin_fecha_siembra = len(filtered_df[pd.isna(filtered_df['crop_date'])])
     porcentaje_sin_fecha_siembra = (lotes_sin_fecha_siembra / total_lotes) * -100 if total_lotes > 0 else 0
+    # Redondear a cero si es muy cercano a cero
+    if abs(porcentaje_sin_fecha_siembra) < 0.001:
+        porcentaje_sin_fecha_siembra = 0
 
     col3.metric(
         translate("fields_without_sowing_date", lang), 
         lotes_sin_fecha_siembra, 
-        f"{porcentaje_sin_fecha_siembra:.2f}%"
+        f"{porcentaje_sin_fecha_siembra:.2f}%",
+        # delta_color = "off" if porcentaje_sin_fecha_siembra == 0 else "normal"
     )
 
     style_metric_cards(border_left_color="#0e112c", box_shadow=False)
