@@ -358,7 +358,7 @@ if selector_hibrido:
         f"{porcentaje_sin_fecha_siembra:.2f}%"
     )
 
-    style_metric_cards(border_left_color="#0e112c")
+    style_metric_cards(border_left_color="#0e112c", box_shadow=False)
 
     ############################################################################
     # Agrupar valores por
@@ -731,7 +731,8 @@ if selector_hibrido:
                 # Crear dos columnas, la primera ocupa dos tercios y la segunda un tercio
                 col1, col2 = st.columns([3,1])
 
-                with col1:                
+                with col1:     
+                    st.markdown('')   
                     # Código existente para la selección y la creación del gráfico
                     selected_analysis_value = st.selectbox(selected_key, filtered_df[selected_value].unique())
                     # Filtrar el DataFrame basado en el valor seleccionado
