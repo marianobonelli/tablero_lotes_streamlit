@@ -709,7 +709,7 @@ if selector_hibrido:
                         fig_bar.add_annotation(
                             x=row['hectares'],
                             y=row[selected_value],
-                            text=f"{row['hectares']:.1f}%",  # Formato de dos decimales para el porcentaje
+                            text=f"{row['hectares']:.1f} %",  # Formato de dos decimales para el porcentaje
                             showarrow=False,
                             font=dict(color='black'),
                             xref="x",
