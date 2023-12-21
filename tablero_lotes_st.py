@@ -16,6 +16,7 @@ import streamlit as st
 from streamlit_folium import folium_static
 from streamlit_folium import st_folium
 from streamlit_extras.metric_cards import style_metric_cards 
+from streamlit_vertical_slider import vertical_slider 
 
 # Importar bibliotecas para manejo de imágenes
 from PIL import Image
@@ -466,38 +467,64 @@ if selector_hibrido:
         st.markdown('')
         st.markdown(f"<b>{translate('hectares_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
-        # Crear un gráfico de torta con Plotly Express
-        pie_fig = px.pie(
-            grouped_df,
-            names=selected_value,  # Usa el valor seleccionado como etiquetas
-            values='hectares',     # Usa las hectáreas como valores
-            color=selected_value,  # Colorea según el valor seleccionado
-            color_discrete_sequence=selected_colors  # Utiliza la misma paleta de colores
-        )
+        # Crear columnas para el control deslizante y el gráfico
+        col1, col2 = st.columns([2,10])  # Cambio aquí: de 'ol1, col2' a 'col1, col2'
 
-        # Crear el hovertemplate personalizado
-        hovertemplate = (
-            f"<b>%{{label}}</b><br>"
-            f"{translate('hectares', lang)}: %{{value}}<br>"
-            f"Porcentaje: %{{percent:.2%}}"  # Multiplica por 100 y muestra como porcentaje
-        )
-
-        # Personalizar el gráfico de torta para que el texto quede por fuera
-        pie_fig.update_traces(
-            textinfo='percent+label',
-            textposition='outside',
-            outsidetextfont=dict(family="Roboto", size=12),
-            pull=0.02,
-            texttemplate='%{label} %{percent:.2%}',  # Multiplica por 100 para mostrar el porcentaje correctamente
-            hovertemplate=hovertemplate
-        )
-
-        pie_fig.update_layout(
-            font=dict(family="Roboto", size=18)
+        # En la primera columna (col1), añadir el control deslizante
+        with col1:
+            st.markdown('')
+            st.markdown('')
+            st.markdown('')
+            st.markdown('')
+            st.markdown('')
+            
+            rotation = vertical_slider(
+                key="Rotación del gráfico", 
+                default_value=0,
+                step=5,
+                min_value=0,
+                max_value=360,
+                track_color="gray",  # optional
+                thumb_color="#0e112c",  # optional
+                slider_color="gray",  # optional
+                value_always_visible = False ,
             )
 
-        # Mostrar el gráfico de torta en Streamlit
-        st.plotly_chart(pie_fig, use_container_width=True)
+        # En la segunda columna (col2), mostrar el gráfico
+        with col2:
+            # Crear un gráfico de torta con Plotly Express
+            pie_fig = px.pie(
+                grouped_df,
+                names=selected_value,  # Usa el valor seleccionado como etiquetas
+                values='hectares',     # Usa las hectáreas como valores
+                color=selected_value,  # Colorea según el valor seleccionado
+                color_discrete_sequence=selected_colors  # Utiliza la misma paleta de colores
+            )
+
+            # Crear el hovertemplate personalizado
+            hovertemplate = (
+                f"<b>%{{label}}</b><br>"
+                f"{translate('hectares', lang)}: %{{value}}<br>"
+                f"Porcentaje: %{{percent:.2%}}"  # Multiplica por 100 y muestra como porcentaje
+            )
+
+            # Personalizar el gráfico de torta para que el texto quede por fuera
+            pie_fig.update_traces(
+                textinfo='percent+label',
+                textposition='outside',
+                outsidetextfont=dict(family="Roboto", size=12),
+                pull=0.02,
+                texttemplate='%{label} %{percent:.2%}',  # Multiplica por 100 para mostrar el porcentaje correctamente
+                hovertemplate=hovertemplate
+            )
+
+            # Actualizar la rotación del gráfico
+            pie_fig.update_traces(
+                rotation=rotation  # Actualiza la rotación del gráfico de torta
+            )
+
+            # Mostrar el gráfico actualizado
+            st.plotly_chart(pie_fig, use_container_width=True)
 
         ############################################################################
         # Gráfico de barras
