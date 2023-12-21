@@ -477,9 +477,10 @@ if selector_hibrido:
             st.markdown('')
             st.markdown('')
             st.markdown('')
-            
+
             rotation = vertical_slider(
                 key="Rotación del gráfico", 
+                thumb_shape = "pill", #Optional - Defaults to "circle"
                 default_value=0,
                 step=5,
                 min_value=0,
