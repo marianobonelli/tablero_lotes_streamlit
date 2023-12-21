@@ -485,9 +485,9 @@ if selector_hibrido:
                 step=5,
                 min_value=0,
                 max_value=360,
-                track_color="gray",  # optional
+                track_color="lightgray",  # optional
                 thumb_color="#0e112c",  # optional
-                slider_color="gray",  # optional
+                slider_color="lightgray",  # optional
                 value_always_visible = False ,
             )
 
