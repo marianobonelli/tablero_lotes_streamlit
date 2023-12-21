@@ -16,7 +16,6 @@ El Nombre del Proyecto es una aplicación innovadora diseñada para [breve descr
 * Para instalar y configurar el Nombre del Proyecto, sigue los siguientes pasos:
 
  ```bash
-Copy code
 # Clona el repositorio
 git clone [URL del repositorio]
 
@@ -34,7 +33,6 @@ cd [Nombre del Proyecto]
 Para usar el proyecto, sigue estos pasos:
 
  ```bash
-Copy code
 [Instrucciones para ejecutar o usar el proyecto]
  ```
 
