@@ -13,7 +13,6 @@ from folium.plugins import HeatMap
 
 # Importar bibliotecas para integración web y Streamlit
 import streamlit as st
-from streamlit_folium import folium_static
 from streamlit_folium import st_folium
 from streamlit_extras.metric_cards import style_metric_cards 
 from streamlit_vertical_slider import vertical_slider 
