@@ -82,9 +82,9 @@ It consists of 4 sections:
 
     E. Sowing date Charts:
 
-    * Sowing date and seeding progress:
+    E1. Sowing date and seeding progress:
 
-    * Hectares by sowing date:
+    E2. Hectares by sowing date:
 
 
 ## Arquitechture Diagram 
