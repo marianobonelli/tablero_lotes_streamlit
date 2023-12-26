@@ -57,7 +57,7 @@ It consists of __ sections:
 
 2. Filters (Sidebar): Users can filter data according to Domain, Area(s), Workspace(s), Campaign(s), Establishment(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, Crops and Hybrids/Varieties are included in this selection.
 
-3. Metrics: Located below the title, this section displays metrics relevant to the selected filters, such as:
+3. Metrics: Located below the Upper Section, this section displays metrics relevant to the selected filters, such as:
 
     * Farms
     * Field
