@@ -96,6 +96,7 @@ It consists of __ sections:
 * [![Python][Python.org]][Python-url]
 * [![docker][docker]][docker-url]
 * [![streamlit][streamlit]][streamlit-url]
+* [![plotly][plotly][plotly-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -160,3 +161,6 @@ Adrian Cuello - [Adrian Cuello](mailto:acuello@geoagro.com.com?subject=[GitHub]m
 
 [docker]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
 [docker-URL]: https://www.docker.com/
+
+[plotly]: https://img.shields.io/badge/Plotly-3F4F75?style=for-the-badge&logo=plotly&logoColor=white
+[plotly-url]: https://plotly.com/python/
