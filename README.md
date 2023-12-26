@@ -49,11 +49,25 @@
 
 ## About the Project
 
-This form allows the request of a processing order from DataLab operators, which contains all the information from 360.
+This microservice generates a summary dashboard of Lot and Crop data uploaded to 360, based on the selected Domain, Area(s), Workspace(s), Season(s), and Farm(s).
 
-In order to make the request, the user must log in with their 360 account, and once logged in, the form will automatically display the information associated with their domains, areas, workspaces, farms, fields and crops.
+It consists of __ sections:
 
-You must complete each of the requested fields, taking into account the type of request: Interpolated Maps, Application Processing, Productivity Map and Yield Processing. Depending on the type of request, the fields to be completed will be displayed.
+1. Upper Section: This section includes the Domain logo, the dashboard title, a language selector, and user information.
+
+2. Filters (Sidebar): Users can filter data according to Domain, Area(s), Workspace(s), Campaign(s), Establishment(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, Crops and Hybrids/Varieties are included in this selection.
+
+3. Metrics: Located below the title, this section displays metrics relevant to the selected filters, such as:
+
+* Farms
+* Field
+* Hectares
+* Crops
+* Hybrids / Varieties
+* Fields without crops
+* Fields without hybrids/varieties
+* Fields without sowing date
+
 
 ## Arquitechture Diagram 
 
