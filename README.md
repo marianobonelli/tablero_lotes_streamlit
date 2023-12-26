@@ -96,7 +96,7 @@ It consists of __ sections:
 * [![Python][Python.org]][Python-url]
 * [![docker][docker]][docker-url]
 * [![streamlit][streamlit]][streamlit-url]
-* [![plotly][plotly][plotly-url]
+* [![plotly][plotly]][plotly-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
