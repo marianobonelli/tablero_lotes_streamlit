@@ -72,13 +72,20 @@ It consists of 4 sections:
 
 4. Charts and Maps:
 
-    a. Sub Filters
-    b. Pie Chart
-    c. Bar Chart:
-    d. Map:
-    e. Sowing date Charts:
-        e_1 Sowing date and seeding progress:
-        e_2 Hectares by sowing date:
+    A. Sub Filters:
+
+    B. Pie Chart:
+
+    C. Bar Chart:
+
+    D. Map:
+
+    E. Sowing date Charts:
+
+        E_1 Sowing date and seeding progress:
+
+        E_2 Hectares by sowing date:
+        
 
 ## Arquitechture Diagram 
 
