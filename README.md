@@ -53,7 +53,7 @@ This microservice generates a summary dashboard of Fields and Crops data uploade
 
 [![Product Name Screen Shot][product-screenshot]](assets/Tablero.png)
 
-It consists of __ sections:
+It consists of 4 sections:
 
 1. Upper Section: This section includes the Domain logo, the dashboard title, a language selector, and user information.
 
@@ -70,6 +70,15 @@ It consists of __ sections:
     * Fields without hybrids/varieties
     * Fields without sowing date
 
+4. Charts and Maps:
+
+    a. Sub Filters
+    b. Pie Chart
+    c. Bar Chart:
+    d. Map:
+    e. Sowing date Charts:
+        e_1 Sowing date and seeding progress:
+        e_2 Hectares by sowing date:
 
 ## Arquitechture Diagram 
 
