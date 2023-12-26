@@ -12,7 +12,7 @@
   </a>
 
   <p align="center">
-      This microservice provides a form developed with Streamlit and Python to request processing requests from the datalab team <br />
+      This microservice generates a summary dashboard of Fields and Crops data uploaded to 360, developed with Streamlit and Python <br />
     <br />
     <br />
   </p>
@@ -49,7 +49,7 @@
 
 ## About the Project
 
-This microservice generates a summary dashboard of Lot and Crop data uploaded to 360, based on the selected Domain, Area(s), Workspace(s), Season(s), and Farm(s).
+This microservice generates a summary dashboard of Fields and Crops data uploaded to 360, based on the selected Domain, Area(s), Workspace(s), Season(s), and Farm(s), Crop(s) and Hybrids / Varieties.
 
 It consists of __ sections:
 
