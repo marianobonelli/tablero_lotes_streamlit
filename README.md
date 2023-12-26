@@ -11,8 +11,6 @@
 
   </a>
 
-  <h3 align="center">DATAREQUEST</h3>
-
   <p align="center">
       This microservice provides a form developed with Streamlit and Python to request processing requests from the datalab team <br />
     <br />
