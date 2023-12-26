@@ -51,6 +51,8 @@
 
 This microservice generates a summary dashboard of Fields and Crops data uploaded to 360, based on the selected Domain, Area(s), Workspace(s), Season(s), and Farm(s), Crop(s) and Hybrids / Varieties.
 
+[![Product Name Screen Shot][product-screenshot]](assets/Tablero.png)
+
 It consists of __ sections:
 
 1. Upper Section: This section includes the Domain logo, the dashboard title, a language selector, and user information.
