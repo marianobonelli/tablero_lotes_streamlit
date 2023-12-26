@@ -57,7 +57,7 @@ It consists of 4 sections:
 
 1. Upper Section: This section includes the Domain logo, the dashboard title, a language selector, and user information.
 
-2. Filters (Sidebar): Users can filter data according to Domain, Area(s), Workspace(s), Campaign(s), Establishment(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, Crops and Hybrids/Varieties are included in this selection.
+2. Filters (Sidebar): Users can filter data according to Domain, Area(s), Workspace(s), Season(s), Farm(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, Crops and Hybrids/Varieties are included in this selection.
 
 3. Metrics: Located below the Upper Section, this section displays metrics relevant to the selected filters, such as:
 
