@@ -94,9 +94,13 @@ It consists of __ sections:
 
 ### Built With
 * [![Python][Python.org]][Python-url]
-* [![docker][docker]][docker-url]
-* [![streamlit][streamlit]][streamlit-url]
-* [![plotly][plotly]][plotly-url]
+* [![Docker][docker]][docker-url]
+* [![Streamlit][streamlit]][streamlit-url]
+* [![Plotly][plotly]][plotly-url]
+* [![Pandas][pandas]][pandas-url]
+* [![GeoPandas][geopandas]][geopandas-url]
+* [![Folium][folium]][folium-url]
+* [![Pillow][pillow]][pillow-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -153,14 +157,26 @@ Adrian Cuello - [Adrian Cuello](mailto:acuello@geoagro.com.com?subject=[GitHub]m
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [product-screenshot]: images/screenshot.png
 
-[Python.org]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
+[Python.org]: https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [Python-url]: https://python.org/
 
 [streamlit]: https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white
-[streamlit-URL]: https://docs.streamlit.io/
+[streamlit-url]: https://docs.streamlit.io/
 
 [docker]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
-[docker-URL]: https://www.docker.com/
+[docker-url]: https://www.docker.com/
 
 [plotly]: https://img.shields.io/badge/Plotly-3F4F75?style=for-the-badge&logo=plotly&logoColor=white
 [plotly-url]: https://plotly.com/python/
+
+[pandas]: https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white
+[pandas-url]: https://pandas.pydata.org/
+
+[geopandas]: https://img.shields.io/badge/GeoPandas-119DFF?style=for-the-badge&logo=geopandas&logoColor=white
+[geopandas-url]: https://geopandas.org/
+
+[folium]: https://img.shields.io/badge/Folium-77B829?style=for-the-badge&logo=folium&logoColor=white
+[folium-url]: https://python-visualization.github.io/folium/
+
+[pillow]: https://img.shields.io/badge/Pillow-FF5B77?style=for-the-badge&logo=pillow&logoColor=white
+[pillow-url]: https://python-pillow.org/
