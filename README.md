@@ -7,7 +7,7 @@
 <br />
 <div align="center">
 
-![image](https://github.com/marianobonelli/tablero_lotes_streamlit/tree/main/assets/datalab)
+![image](assets/datalab.png)
 
   </a>
 
