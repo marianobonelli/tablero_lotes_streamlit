@@ -141,8 +141,8 @@ Adrian Cuello - [Adrian Cuello](mailto:acuello@geoagro.com.com?subject=[GitHub]m
 [Python.org]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [Python-url]: https://python.org/
 
-[streamlit]: https://img.shields.io/badge/streamlit-red
+[streamlit]: https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white
 [streamlit-URL]: https://docs.streamlit.io/
 
-[docker]: https://img.shields.io/badge/docker-blue
+[docker]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
 [docker-URL]: https://www.docker.com/
