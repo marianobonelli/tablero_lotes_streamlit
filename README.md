@@ -59,14 +59,14 @@ It consists of __ sections:
 
 3. Metrics: Located below the title, this section displays metrics relevant to the selected filters, such as:
 
-* Farms
-* Field
-* Hectares
-* Crops
-* Hybrids / Varieties
-* Fields without crops
-* Fields without hybrids/varieties
-* Fields without sowing date
+    * Farms
+    * Field
+    * Hectares
+    * Crops
+    * Hybrids / Varieties
+    * Fields without crops
+    * Fields without hybrids/varieties
+    * Fields without sowing date
 
 
 ## Arquitechture Diagram 
