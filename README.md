@@ -120,17 +120,17 @@ Coming soon, it will allow downloading a PDF printout of the dashboard.
 ### Description
 
    
-1- The user must login in 360.geoagro.com.
+1. The user must login in 360.geoagro.com.
 
-2- In the switcher (up-left corner) must select "___________".
+2. In the switcher (up-left corner) must select "___________".
 
-4- It opens the url with two tokens, token1 has an info of user like:
+3. It opens the url with two tokens, token1 has an info of user like:
    
      user_info={'email': user_email, 'language': 'es', 'env': 'prod', 'domainId': None, 'areaId': None,   'workspaceId': None, 'seasonId': None, 'farmId': None}
 
-5- An Application Load Balancer take the request and send to fargate.
+4. An Application Load Balancer take the request and send to fargate.
   
-6- In fargate, the dashboard is running troughby docker as service.
+5. In fargate, the dashboard is running troughby docker as service.
    
 
 
