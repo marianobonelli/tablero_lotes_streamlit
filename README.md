@@ -184,8 +184,8 @@ Run:
 <!-- ROADMAP -->
 ## Roadmap
 
-<a href="https://geoagro1.atlassian.net/browse/DLL-70">
-  DLL-70 - Un usuario quiere generar un tablero de estadisticas de lotes por Dominio, o WS o Establecimiento
+<a href="https://docs.google.com/document/d/19VhJlm70Q17YGFvpXy7lmjpxVoGL94f7krxuTHCWmGE/edit?usp=sharing">
+  Tablero de Lotes y Cultivos
 </a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
