@@ -77,19 +77,37 @@ Located below the Upper Section, this section displays metrics relevant to the s
 
 #### Sub Filters:
 
+Users can group information according to Area, Workspace, Season, Farm, Crop, and Hybrid/Variety. This grouping will be the basis for visualizations in the following charts. Additionally, they can filter data by sowing date and choose to include, exclude, or only display data from plots that do not have a sowing date.
+
 #### Pie Chart:
+
+This displays the percentage relationship of the unique values in the selected grouping field. It includes a side slider that allows rotating the pie chart to enhance the visualization of the labels.
 
 #### Bar Chart:
 
+Displays the hectares corresponding to the unique values of the selected grouping field.
+
 #### Map:
+
+Displays the location of the fields that make up the selection, with symbols representing the unique values of the selected grouping field.
 
 #### Sowing date Charts:
 
+Displays the sowing dates for each unique value of the selected grouping field. It consists of two tabs.
+
 #### Sowing date and seeding progress:
+
+The first tab, consisting of two charts. The first chart shows the sowing dates for each unique value of the selected grouping field. The second chart displays the percentage of hectares sown, calculated as the hectares from the filter with an assigned sowing date divided by the total hectares in the filter.
 
 #### Hectares by sowing date:
 
+The second tab, allowing selection within the unique values of the grouping field to visualize in a bar chart the hectares sown per day, and in a line and dot chart the cumulative hectares. Additionally, it displays a metric showing the sowing progress for that selection.
+
 ### 5. Download:
+
+Enables downloading the information used in the analysis as a CSV file according to the filters in the sidebar.
+
+Coming soon, it will allow downloading a PDF printout of the dashboard.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -102,7 +120,7 @@ Located below the Upper Section, this section displays metrics relevant to the s
    
 1- The user must login in 360.geoagro.com.
 
-2- In the switcher (up-left corner) must select "Data Request".
+2- In the switcher (up-left corner) must select "Tablero de Lotes y Cultivos".
 
 4- It opens the url with two tokens, token1 has an info of user like:
    
@@ -110,7 +128,7 @@ Located below the Upper Section, this section displays metrics relevant to the s
 
 5- An Application Load Balancer take the request and send to fargate.
   
-6- In fargate, the datarequest form is running troughby docker as service.
+6- In fargate, the dashboard is running troughby docker as service.
    
 
 
@@ -136,7 +154,7 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/GeoagrobyTEK/ms-datarequest.git
+   git clone https://github.com/marianobonelli/tablero_lotes_streamlit.git
    ```
 2. Install dependencies
    ```sh
@@ -144,7 +162,7 @@ To get a local copy up and running follow these simple example steps.
    ```
 3. Execute
    ```sh
-     streamlit python3 app.py 
+     streamlit python3 tablero_lotes_st.py 
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -172,9 +190,16 @@ Run:
 <!-- CONTACT -->
 ## Contact
 
-Mariano Bonelli - [Mariano Bonelli](mailto:mbonelli@geoagro.com.com?subject=[GitHub]tablero_lotes_cultivos)
+### Mariano Bonelli
 
-Adrian Cuello - [Adrian Cuello](mailto:acuello@geoagro.com.com?subject=[GitHub]tablero_lotes_cultivos)
+[![Email Badge](https://img.shields.io/badge/-mbonelli@geoagro.com-gray?style=flat&logo=gmail&logoColor=white)](mailto:mbonelli@geoagro.com?subject=[GitHub]tablero_lotes_cultivos)
+[![LinkedIn Badge](https://img.shields.io/badge/-marianobonelli-gray?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/mariano-francisco-bonelli/)
+[![Twitter Badge](https://img.shields.io/badge/-marianobonelli-gray?logo=x&logoColor=white)](https://twitter.com/marianobonelli)
+
+
+### Adrian Cuello (API)
+
+[![Email Badge](https://img.shields.io/badge/-acuello@geoagro.com-gray?style=flat&logo=gmail&logoColor=white)](mailto:acuello@geoagro.com?subject=[GitHub]tablero_lotes_cultivos)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
