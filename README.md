@@ -120,7 +120,7 @@ Coming soon, it will allow downloading a PDF printout of the dashboard.
    
 1- The user must login in 360.geoagro.com.
 
-2- In the switcher (up-left corner) must select "Tablero de Lotes y Cultivos".
+2- In the switcher (up-left corner) must select "___________".
 
 4- It opens the url with two tokens, token1 has an info of user like:
    
@@ -146,7 +146,7 @@ Coming soon, it will allow downloading a PDF printout of the dashboard.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
-## Getting Started
+## Getting Started (en desarrollo)
 
 To get a local copy up and running follow these simple example steps.
 
@@ -170,7 +170,8 @@ To get a local copy up and running follow these simple example steps.
 
 ### Usage
 
-Uncomment lines 1003 to 1005 and Comment lines 1008 to 1032.
+Uncomment lines __ to __ and Comment lines __ to __.
+
 In this way, the app runs with info presetted in user_info (Please, use your email).
 
 Run:
