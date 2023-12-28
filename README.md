@@ -89,7 +89,7 @@ It consists of 4 sections:
 
 ## Arquitechture Diagram 
 
-![datarequest](https://github.com/GeoagrobyTEK/ms-datarequest/assets/101668748/deb86ec8-e2c3-42f6-9d20-8eb59b8983ce)
+[![arquitectura][arquitectura]](assets/arquitectura.png)
 
 ### Description
 
@@ -174,6 +174,8 @@ Adrian Cuello - [Adrian Cuello](mailto:acuello@geoagro.com.com?subject=[GitHub]m
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [product-screenshot]: assets/Tablero.png
+
+[arquitectura]: assets/arquitectura.png
 
 [Python.org]: https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [Python-url]: https://python.org/
