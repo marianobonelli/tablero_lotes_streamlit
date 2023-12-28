@@ -31,8 +31,8 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
         <li><a href="#arquitechture-diagram">Arquitechture-Diagram</a></li>
+        <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
     <li>
@@ -42,7 +42,7 @@
         <li><a href="#usage">Usage</a></li>
       </ul>
     </li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#Roadmap and Related documentation">Roadmap and Related documentation</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -180,9 +180,11 @@ Run:
  ```sh
     http://localhost:5000/
  ```
-  
-<!-- ROADMAP -->
-## Roadmap
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ROADMAP AND RELATED DOCUMENTATION -->
+## Roadmap and Related documentation
 
 <a href="https://docs.google.com/document/d/19VhJlm70Q17YGFvpXy7lmjpxVoGL94f7krxuTHCWmGE/edit?usp=sharing">
   Tablero de Lotes y Cultivos
