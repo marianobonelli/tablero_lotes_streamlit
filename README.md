@@ -14,10 +14,14 @@
   <p align="center">
       This microservice generates a summary dashboard of Fields and Crops data uploaded to 360, developed with Streamlit and Python <br />
     <br />
+    <a href="https://tablerolotesapp.streamlit.app/">Try Demo App</a>
+    ·
+    <a href="https://geoagro1.atlassian.net/servicedesk/customer/portal/5">Report Bug</a>
+    ·
+    <a href="https://geoagro1.atlassian.net/servicedesk/customer/portal/5">Request Feature</a>
     <br />
   </p>
 </div>
-
 
 
 <!-- TABLE OF CONTENTS -->
