@@ -79,7 +79,7 @@ Located below the Upper Section, this section displays metrics relevant to the s
 
 #### Sub Filters:
 
-Users can group information according to Area, Workspace, Season, Farm, Crop, and Hybrid/Variety. This grouping will be the basis for visualizations in the following charts. Additionally, they can filter data by sowing date and choose to include, exclude, or only display data from plots that do not have a sowing date.
+Users can group information according to Area, Workspace, Season, Farm, Crop, and Hybrid/Variety. This grouping will be the basis for visualizations in the following charts. Additionally, they can filter data by sowing date and choose to include, exclude, or only display data from fields that do not have a sowing date.
 
 #### Pie Chart:
 
