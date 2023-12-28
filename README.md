@@ -54,7 +54,7 @@ This microservice generates a summary dashboard of Fields and Crops data uploade
 [![Product Name Screen Shot][product-screenshot]](assets/Tablero.png)
 
 ### 1. Filters (Sidebar):
-Users can filter data according to Domain, Area(s), Workspace(s), Season(s), Farm(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, Crops and Hybrids/Varieties are included in this selection.
+Users can filter data according to Domain, Area(s), Workspace(s), Season(s), Farm(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, all Crops and Hybrids/Varieties are pre-selected. Additionally, the sidebar includes a color palette selector for use in the charts.
 
 ### 2. Upper Section:
 This section includes the Domain logo, the dashboard title, a language selector, and user information.
