@@ -53,8 +53,6 @@ This microservice generates a summary dashboard of Fields and Crops data uploade
 
 [![Product Name Screen Shot][product-screenshot]](assets/Tablero.png)
 
-The dashboard consists of 5 sections:
-
 ### 1. Filters (Sidebar):
 Users can filter data according to Domain, Area(s), Workspace(s), Season(s), Farm(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, Crops and Hybrids/Varieties are included in this selection.
 
@@ -146,7 +144,7 @@ Coming soon, it will allow downloading a PDF printout of the dashboard.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
-## Getting Started (en desarrollo)
+## Getting Started
 
 To get a local copy up and running follow these simple example steps.
 
@@ -182,8 +180,8 @@ Run:
 <!-- ROADMAP -->
 ## Roadmap
 
-<a href="https://docs.google.com/document/d/1QxpfWqW6_ozwE6CJHmlvxza1wv9uV7N08ZcqytdeTwc/edit#heading=h.yq8ikg4wx1f9">
-  COM-108 Análisis Escenario 1 - pedido de procesamiento de rindes y otros servicios
+<a href="https://geoagro1.atlassian.net/browse/DLL-70">
+  DLL-70 - Un usuario quiere generar un tablero de estadisticas de lotes por Dominio, o WS o Establecimiento
 </a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
