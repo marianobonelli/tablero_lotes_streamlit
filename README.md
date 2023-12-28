@@ -122,7 +122,7 @@ Coming soon, it will allow downloading a PDF printout of the dashboard.
    
 1. The user must login in 360.geoagro.com.
 
-2. In the switcher (up-left corner) must select "___________".
+2. In the switcher (up-right corner) must select "___________".
 
 3. It opens the url with two tokens, token1 has an info of user like:
    
