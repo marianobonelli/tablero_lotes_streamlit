@@ -7,7 +7,7 @@
 <br />
 <div align="center">
 
-![image](assets/datalab.png)
+![image](assets/GeoAgro.png)
 
   </a>
 
@@ -53,39 +53,45 @@ This microservice generates a summary dashboard of Fields and Crops data uploade
 
 [![Product Name Screen Shot][product-screenshot]](assets/Tablero.png)
 
-It consists of 4 sections:
+The dashboard consists of 5 sections:
 
-1. Filters (Sidebar): Users can filter data according to Domain, Area(s), Workspace(s), Season(s), Farm(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, Crops and Hybrids/Varieties are included in this selection.
+### 1. Filters (Sidebar):
+Users can filter data according to Domain, Area(s), Workspace(s), Season(s), Farm(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, Crops and Hybrids/Varieties are included in this selection.
 
-2. Upper Section: This section includes the Domain logo, the dashboard title, a language selector, and user information.
+### 2. Upper Section:
+This section includes the Domain logo, the dashboard title, a language selector, and user information.
 
-3. Metrics: Located below the Upper Section, this section displays metrics relevant to the selected filters, such as:
+### 3. Metrics:
+Located below the Upper Section, this section displays metrics relevant to the selected filters, such as:
 
-    * Farms
-    * Field
-    * Hectares
-    * Crops
-    * Hybrids / Varieties
-    * Fields without crops
-    * Fields without hybrids/varieties
-    * Fields without sowing date
+* Farms
+* Field
+* Hectares
+* Crops
+* Hybrids / Varieties
+* Fields without crops
+* Fields without hybrids/varieties
+* Fields without sowing date
 
-4. Charts and Maps:
+### 4. Charts and Maps:
 
-    A. Sub Filters:
+#### Sub Filters:
 
-    B. Pie Chart:
+#### Pie Chart:
 
-    C. Bar Chart:
+#### Bar Chart:
 
-    D. Map:
+#### Map:
 
-    E. Sowing date Charts:
+#### Sowing date Charts:
 
-    E1. Sowing date and seeding progress:
+#### Sowing date and seeding progress:
 
-    E2. Hectares by sowing date:
+#### Hectares by sowing date:
 
+### 5. Download:
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Arquitechture Diagram 
 
@@ -118,7 +124,6 @@ It consists of 4 sections:
 * [![Pandas][pandas]][pandas-url]
 * [![GeoPandas][geopandas]][geopandas-url]
 * [![Folium][folium]][folium-url]
-* [![Pillow][pillow]][pillow-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -161,12 +166,15 @@ Run:
 <a href="https://docs.google.com/document/d/1QxpfWqW6_ozwE6CJHmlvxza1wv9uV7N08ZcqytdeTwc/edit#heading=h.yq8ikg4wx1f9">
   COM-108 Análisis Escenario 1 - pedido de procesamiento de rindes y otros servicios
 </a>
-<p><a href="#readme-top">back to top</a></p>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
 
-Adrian Cuello - [Adrian Cuello](mailto:acuello@geoagro.com.com?subject=[GitHub]ms-collector)
+Mariano Bonelli - [Mariano Bonelli](mailto:mbonelli@geoagro.com.com?subject=[GitHub]tablero_lotes_cultivos)
+
+Adrian Cuello - [Adrian Cuello](mailto:acuello@geoagro.com.com?subject=[GitHub]tablero_lotes_cultivos)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -197,6 +205,3 @@ Adrian Cuello - [Adrian Cuello](mailto:acuello@geoagro.com.com?subject=[GitHub]m
 
 [folium]: https://img.shields.io/badge/Folium-77B829?style=for-the-badge&logo=folium&logoColor=white
 [folium-url]: https://python-visualization.github.io/folium/
-
-[pillow]: https://img.shields.io/badge/Pillow-FF5B77?style=for-the-badge&logo=pillow&logoColor=white
-[pillow-url]: https://python-pillow.org/
