@@ -23,21 +23,6 @@ from PIL import Image
 # Importar módulos o paquetes locales
 from helper import translate
 
-
-#####################   API   #####################
-
-# Read the CSV file into a DataFrame
-filtered_df = pd.read_csv('csv_rindes.csv')
-user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': None, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
-marca_blanca = 'assets/prodas.png'
-
-##################### USER INFO #####################
-
-language = user_info['language']
-email = user_info['email']
-env = user_info['env']
-st.session_state['env'] = env
-
 ############################################################################
 # Estilo
 ############################################################################
@@ -54,6 +39,20 @@ st.set_page_config(
 
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+#####################   API   #####################
+
+# Read the CSV file into a DataFrame
+filtered_df = pd.read_csv('csv_rindes.csv')
+user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': None, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
+marca_blanca = 'assets/prodas.png'
+
+##################### USER INFO #####################
+
+language = user_info['language']
+email = user_info['email']
+env = user_info['env']
+st.session_state['env'] = env
 
 ##################### LANGUAGE  #####################
 
@@ -77,8 +76,6 @@ with c_3:
         lang = "es"
         st.session_state['lang'] = lang
         pass
-
-
 
 ##################### Titulo / solicitado por  #####################
 
