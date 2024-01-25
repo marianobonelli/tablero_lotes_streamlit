@@ -94,6 +94,12 @@ def load_data(url):
 if data:
     csv_url = data['data']['get_field_table']['csvUrl']
     filtered_df = load_data(csv_url)
+    # Eliminar filas donde 'hectares' es NaN
+    filtered_df = filtered_df.dropna(subset=['hectares'])
+
+    # Eliminar filas donde 'hectares' es igual a 0
+    filtered_df = filtered_df[filtered_df['hectares'] != 0]
+
     # Procesar filtered_df
 else:
     st.error("No se pudo obtener datos de la API.")
