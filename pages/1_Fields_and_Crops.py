@@ -35,6 +35,11 @@ st.set_page_config(
     page_icon=page_icon,
     layout="wide",
     initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://geoagro1.atlassian.net/servicedesk/customer/portal/5',
+        'Report a bug': "https://geoagro1.atlassian.net/servicedesk/customer/portal/5",
+        'About': "Dashboards. Powered by GeoAgro"
+    }
 )
 
 with open('style.css') as f:
@@ -43,9 +48,55 @@ with open('style.css') as f:
 #####################   API   #####################
 
 # Read the CSV file into a DataFrame
-filtered_df = pd.read_csv('csv_rindes.csv')
-user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': None, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
-marca_blanca = 'assets/prodas.png'
+# filtered_df = pd.read_csv('csv_rindes.csv')
+user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': 1, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
+marca_blanca = 'assets/GeoAgro_principal.png'
+
+#####################
+import requests
+
+# Función para realizar la llamada a la API y cachear la respuesta
+@st.cache_data
+def api_call():
+    response = requests.post(url, json={'query': query}, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+access_key_id = st.secrets["API_key"]
+
+# URL de tu API GraphQL y headers
+url = 'https://lpul7iylefbdlepxbtbovin4zy.appsync-api.us-west-2.amazonaws.com/graphql'
+headers = {
+    'x-api-key': access_key_id,
+    'Content-Type': 'application/json'
+}
+
+# Tu consulta GraphQL
+query = f'''
+query MyQuery {{
+  get_field_table(domainId: {user_info['domainId']}, email: "{user_info['email']}", exportAllAsCsv: true, lang: "{user_info['language']}", withHectares: true, withCentroid: true, withGeom: true, delimiter: ";") {{
+    csvUrl
+  }}
+}}
+'''
+
+# Llamar a la función api_call que está cacheada
+data = api_call()
+
+@st.cache_data  # 👈 Add the caching decorator
+def load_data(url):
+    df = pd.read_csv(url, delimiter=";")
+    return df
+
+# Verificar y manejar la respuesta
+if data:
+    csv_url = data['data']['get_field_table']['csvUrl']
+    filtered_df = load_data(csv_url)
+    # Procesar filtered_df
+else:
+    st.error("No se pudo obtener datos de la API.")
 
 ##################### USER INFO #####################
 
@@ -63,43 +114,56 @@ with c_1:
     # image_mb = image_mb.resize((220, 35))
     st.image(image_mb)
 
-with c_3:   
-    try:
-        langs = ['es', 'en', 'pt']
-        if language is not None:
-            lang = st.selectbox(translate("language", language), label_visibility="hidden", options=langs, index=langs.index(language))
-        else:  # from public link
-            lang = st.selectbox(translate("es", language), label_visibility="hidden", options=langs)
+# with c_3:   
+#     try:
+#         langs = ['es', 'en', 'pt']
+#         if language is not None:
+#             lang = st.selectbox(translate("language", language), label_visibility="hidden", options=langs, index=langs.index(language))
+#         else:  # from public link
+#             lang = st.selectbox(translate("es", language), label_visibility="hidden", options=langs)
         
-        st.session_state['lang'] = lang
-    except Exception as exception:
-        lang = "es"
-        st.session_state['lang'] = lang
-        pass
+#         st.session_state['lang'] = lang
+#     except Exception as exception:
+#         lang = "es"
+#         st.session_state['lang'] = lang
+#         pass
+
+# lang = st.session_state['lang']
+
+try:
+    lang = st.session_state['lang']
+except Exception as exception:
+    lang = "es"
+    st.session_state['lang'] = lang
+    pass
 
 ##################### Titulo / solicitado por  #####################
 
 st.subheader(translate("title",lang), anchor=False)
 st.markdown(f'{translate("requested_by",lang)}<a style="color:blue;font-size:18px;">{""+email+""}</a> | <a style="color:blue;font-size:16px;" target="_self" href="/"> {translate("logout",lang)}</a>', unsafe_allow_html=True)
 
-
 with st.sidebar:
     ############################################################################
     # Selector de color
     ############################################################################
+    st.markdown('')
+    st.markdown('')
+
 
     # Obtener la lista de rampas de colores cualitativos
-    color_ramps = dir(px.colors.qualitative)
+    # color_ramps = dir(px.colors.qualitative)
     # Filtrar los elementos que no son rampas de colores
-    color_ramps = [ramp for ramp in color_ramps if not ramp.startswith("__")]
+    # color_ramps = [ramp for ramp in color_ramps if not ramp.startswith("__")]
     # Encontrar el índice de 'T10' en la lista de rampas de colores
-    default_index = color_ramps.index('T10') if 'T10' in color_ramps else 0
+    # default_index = color_ramps.index('T10') if 'T10' in color_ramps else 0
 
     # Selector para la rampa de colores con un valor predeterminado
-    selected_color_ramp = st.selectbox(translate("color_palette", lang), color_ramps, index=default_index)
+    # selected_color_ramp = st.selectbox(translate("color_palette", lang), color_ramps, index=default_index)
 
     # Usa getattr para obtener la rampa de colores seleccionada
-    selected_colors = getattr(px.colors.qualitative, selected_color_ramp)
+    # selected_colors = getattr(px.colors.qualitative, selected_color_ramp)
+
+    selected_colors = px.colors.qualitative.T10
 
     ############################################################################
     # Area
@@ -579,6 +643,11 @@ if selector_hibrido:
         # mapa
         ############################################################################
 
+        # # Markdown
+        # st.markdown('')
+        # st.markdown(f"<b>{translate('point_map_by_field_according_to', lang)} {selected_key}</b>", unsafe_allow_html=True)
+
+        # Ordenar df
         # Calcular la suma total de hectáreas para cada valor de 'selected_value' y crear un campo de orden
         hectares_order = filtered_df.groupby(selected_value)['hectares'].sum().sort_values(ascending=False).reset_index()
         hectares_order['order'] = range(1, len(hectares_order) + 1)
@@ -591,65 +660,152 @@ if selector_hibrido:
         color_map = {val: colors[i % len(colors)] for i, val in enumerate(hectares_order['order'])}
         filtered_df['color'] = filtered_df['order'].map(color_map)
 
-        # Convertir la columna 'centroid' a objetos de geometría
-        filtered_df['geometry'] = filtered_df['centroid'].apply(wkt.loads)
-        gdf = gpd.GeoDataFrame(filtered_df, geometry='geometry')
+        # Añadir un identificador único a cada fila
+        if 'id' not in filtered_df.columns:
+            filtered_df['id'] = filtered_df.index
 
-        st.markdown('')
-        st.markdown(f"<b>{translate('point_map_by_field_according_to', lang)} {selected_key}</b>", unsafe_allow_html=True)
+        # Crear un diccionario para mapear los identificadores a colores
+        id_to_color = dict(zip(filtered_df['id'], filtered_df['color']))
 
-        # Crear mapa
-        m = folium.Map(location=[gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()], zoom_start=7)
-        feature_groups = {}
+        # Generador de los gdf:
+        @st.cache_data  # 👈 Add the caching decorator
+        def generate_gdf_polygons(df):
+            df_poly = df.copy()
+            df_poly['geometry'] = df_poly['geom'].apply(wkt.loads)
+            gdf = gpd.GeoDataFrame(df_poly, geometry='geometry')
+            return gdf
+        
+        # Crear un GeoDataFrame usando la columna de geometría convertida
+        gdf_poly = generate_gdf_polygons(filtered_df)
 
-        # Preparar los datos para el heatmap
-        heat_data = [[row.geometry.y, row.geometry.x, row['hectares']] for idx, row in gdf.iterrows()]
+        @st.cache_data
+        def generate_gdf_points(df):
+            df_point = df.copy()
+            df_point = df_point.drop(columns='geom')
+            df_point['geometry'] = df_point['centroid'].apply(wkt.loads)
+            gdf = gpd.GeoDataFrame(df_point, geometry='geometry')
+            return gdf
+        
+        # Crear un GeoDataFrame usando la columna de geometría convertida
+        gdf_point = generate_gdf_points(filtered_df)
 
-        for group_name in grouped_df[selected_value]:
-            for idx, row in filtered_df[filtered_df[selected_value] == group_name].iterrows():
-                group_name = row[selected_value]
-                if group_name not in feature_groups:
-                    feature_groups[group_name] = FeatureGroup(name=str(group_name))
+        # Organizar los widgets en dos columnas
+        col1, col2 = st.columns([3,1])
 
-                marker = folium.CircleMarker(
-                    location=[row.geometry.y, row.geometry.x],
-                    radius=7,
-                    color=row['color'],
-                    fill=True,
-                    fill_opacity=0.8,
-                    fill_color=row['color'],
-                    tooltip=(
-                        "<span style='font-family:Roboto;'>"
-                        f"{translate('area', lang)}: {row['area_name']}<br>"
-                        f"{translate('workspace', lang)}: {row['workspace_name']}<br>"
-                        f"{translate('season', lang)}: {row['season_name']}<br>"
-                        f"{translate('farm', lang)}: {row['farm_name']}<br>"
-                        f"{translate('field', lang)}: {row['field_name']}<br>"
-                        f"{translate('crop', lang)}: {row['crop']}<br>"
-                        f"{translate('hybrid_variety', lang)}: {row['hybrid']}<br>"
-                        f"{translate('seeding_date', lang)}: {row['crop_date']}<br>"
-                        f"{translate('hectares', lang)}: {row['hectares']}<br>"
-                        "</span>")
+        # Columna 1: Markdowns
+        with col1:
+            st.markdown('')
+            st.markdown('')
+            st.markdown(f"<b>{translate('point_map_by_field_according_to', lang)} {selected_key}</b>", unsafe_allow_html=True)
+
+        # Columna 2: Selector de puntos o polígonos
+        with col2:
+            # Opción para incluir/excluir/solo sin fecha asignada
+            tipo_de_mapa = col2.selectbox("", [translate("points", lang), translate("polygons", lang)])
+
+        
+        if tipo_de_mapa == translate("points", lang):
+            # Crear mapa
+            m = folium.Map(location=[gdf_point.geometry.centroid.y.mean(), gdf_point.geometry.centroid.x.mean()], zoom_start=7)
+            feature_groups = {}
+
+            # Preparar los datos para el heatmap
+            heat_data = [[row.geometry.y, row.geometry.x, row['hectares']] for idx, row in gdf_point.iterrows()]
+
+            for group_name in grouped_df[selected_value]:
+                for idx, row in gdf_point[gdf_point[selected_value] == group_name].iterrows():
+                    group_name = row[selected_value]
+                    if group_name not in feature_groups:
+                        feature_groups[group_name] = FeatureGroup(name=str(group_name))
+
+                    marker = folium.CircleMarker(
+                        location=[row.geometry.y, row.geometry.x],
+                        radius=7,
+                        color=row['color'],
+                        fill=True,
+                        fill_opacity=0.8,
+                        fill_color=row['color'],
+                        tooltip=(
+                            "<span style='font-family:Roboto;'>"
+                            f"{translate('area', lang)}: {row['area_name']}<br>"
+                            f"{translate('workspace', lang)}: {row['workspace_name']}<br>"
+                            f"{translate('season', lang)}: {row['season_name']}<br>"
+                            f"{translate('farm', lang)}: {row['farm_name']}<br>"
+                            f"{translate('field', lang)}: {row['field_name']}<br>"
+                            f"{translate('crop', lang)}: {row['crop']}<br>"
+                            f"{translate('hybrid_variety', lang)}: {row['hybrid']}<br>"
+                            f"{translate('seeding_date', lang)}: {row['crop_date']}<br>"
+                            f"{translate('hectares', lang)}: {row['hectares']}<br>"
+                            "</span>")
+                    )
+                    marker.add_to(feature_groups[group_name])
+
+            for group_name, feature_group in feature_groups.items():
+                feature_group.add_to(m)
+
+            # Agregar heatmap al mapa como un layer adicional
+            heatmap_feature_group = FeatureGroup(name=translate('heatmap', lang), show=True)
+            HeatMap(heat_data).add_to(heatmap_feature_group)
+            heatmap_feature_group.add_to(m)
+
+            # Agrega la capa de teselas de Esri World Imagery
+            tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+            attr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            folium.TileLayer(tiles, attr=attr, name='Esri World Imagery', show=True).add_to(m)
+
+            LayerControl(collapsed=True).add_to(m)
+
+            # m.save("map.html")
+            st_folium(m, use_container_width=True)
+
+        elif tipo_de_mapa == translate("polygons", lang):
+
+            # Crear mapa
+            m = folium.Map(location=[gdf_poly.geometry.centroid.y.mean(), gdf_poly.geometry.centroid.x.mean()], zoom_start=7)
+
+            # Preparar los datos para los grupos de características, respetando el orden
+            feature_groups = {name: FeatureGroup(name=str(name)) for name in hectares_order[selected_value]}
+
+            for idx, row in gdf_poly.iterrows():
+                # Aquí se puede personalizar el contenido del tooltip
+                tooltip_content = (
+                    f"<span style='font-family:Roboto;'>"
+                    f"{translate('area', lang)}: {row['area_name']}<br>"
+                    f"{translate('workspace', lang)}: {row['workspace_name']}<br>"
+                    f"{translate('season', lang)}: {row['season_name']}<br>"
+                    f"{translate('farm', lang)}: {row['farm_name']}<br>"
+                    f"{translate('field', lang)}: {row['field_name']}<br>"
+                    f"{translate('crop', lang)}: {row['crop']}<br>"
+                    f"{translate('hybrid_variety', lang)}: {row['hybrid']}<br>"
+                    f"{translate('seeding_date', lang)}: {row['crop_date']}<br>"
+                    f"{translate('hectares', lang)}: {row['hectares']}<br>"
+                    "</span>"
                 )
-                marker.add_to(feature_groups[group_name])
 
-        for group_name, feature_group in feature_groups.items():
-            feature_group.add_to(m)
+                
+                folium.GeoJson(
+                    row.geometry,
+                    style_function=lambda feature, id=row['id']: {
+                        "fillColor": id_to_color[id],
+                        "color": id_to_color[id],
+                        "weight": 2,
+                        "fillOpacity": 0.6
+                    },
+                    tooltip=tooltip_content
+                ).add_to(feature_groups[row[selected_value]])
 
-        # Agregar heatmap al mapa como un layer adicional
-        heatmap_feature_group = FeatureGroup(name=translate('heatmap', lang), show=False)
-        HeatMap(heat_data).add_to(heatmap_feature_group)
-        heatmap_feature_group.add_to(m)
+            # Agregar los grupos de características al mapa en el orden correcto
+            for name in hectares_order[selected_value]:
+                feature_groups[name].add_to(m)
 
-        # Agrega la capa de teselas de Esri World Imagery
-        tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-        attr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-        folium.TileLayer(tiles, attr=attr, name='Esri World Imagery', show=True).add_to(m)
+            # Agrega la capa de teselas de Esri World Imagery y el control de capas
+            tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+            attr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            folium.TileLayer(tiles, attr=attr, name='Esri World Imagery', show=True).add_to(m)
+            LayerControl(collapsed=True).add_to(m)
 
-        LayerControl(collapsed=True).add_to(m)
-
-        # m.save("map.html")
-        st_folium(m, use_container_width=True)
+            # Mostrar el mapa en Streamlit
+            st_folium(m, use_container_width=True)
 
         ############################################################################
         # timeline

@@ -62,33 +62,6 @@ div[aria-labelledby="Emails para notificaciones"]{
 }
 
 
-div[data-testid="stToolbar"] {
-visibility: hidden;
-height: 0%;
-position: fixed;
-}
-div[data-testid="stDecoration"] {
-   visibility: hidden;
-   height: 0%;
-   position: fixed;
-}
-div[data-testid="stStatusWidget"] {
-   visibility: hidden;
-   height: 0%;
-   position: fixed;
-}
-#MainMenu {
-   visibility: hidden;
-   height: 0%;
-}
-header {
-   visibility: hidden;
-   height: 0%;
-}
-footer {
-   visibility: hidden;
-   height: 0%;
-}
 
 .st-bt {
    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -170,3 +143,13 @@ div.css-6qob1r.e1fqkh3o3 {
    font-weight:300;
 }
 
+
+.st-emotion-cache-br2g7n {
+   font-family: 'Roboto';
+   font-size: 1rem;
+}
+
+.st-emotion-cache-9gvukl {
+   font-family: 'Roboto';
+   font-size: 1rem;
+}
