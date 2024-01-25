@@ -105,28 +105,28 @@ def image_without_link(path, width=300, height=150):
     return html
 
 with st.container(border=True):
-    c_1, c_2 = st.columns([4, 8])
+    c_1, c_2, c_3 = st.columns([4, 0.5, 8])
 
     with c_1:
         image_path_lyc = 'assets/image_lyc.png'
         # st.markdown(image_without_link(image_path_lyc), unsafe_allow_html=True)
         st.image(Image.open(image_path_lyc))
 
-    with c_2:
+    with c_3:
         st.subheader(translate("title", lang))
         st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum interdum diam vitae hendrerit. Vivamus non nibh massa.")
         url_ver_mas = "https://support.geoagro.com/es/kb/"
         st.markdown(f'[{translate("ver_mas", lang)}]({url_ver_mas})', unsafe_allow_html=True)
 
 with st.container(border=True):
-    c_1, c_2 = st.columns([4, 8])
+    c_1, c_2, c_3 = st.columns([4, 0.5, 8])
 
     with c_1:
         image_tablero_yield = 'assets/image_yield.png'
         # st.markdown(image_without_link(image_tablero_yield), unsafe_allow_html=True)
         st.image(Image.open(image_tablero_yield))
 
-    with c_2:
+    with c_3:
         st.subheader(translate("title_yield", lang))
         st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum interdum diam vitae hendrerit. Vivamus non nibh massa.")
         url_ver_mas = "https://support.geoagro.com/es/kb/"
