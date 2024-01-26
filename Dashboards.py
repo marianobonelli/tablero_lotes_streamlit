@@ -1,31 +1,12 @@
-# Importar bibliotecas para manipulación de datos
-import pandas as pd
-import geopandas as gpd
-from shapely import wkt
-
-# Importar bibliotecas para visualización
-import plotly.express as px
-import plotly.graph_objs as go
-from plotly.subplots import make_subplots
-import folium
-from folium import FeatureGroup, LayerControl
-from folium.plugins import HeatMap
-
 # Importar bibliotecas para integración web y Streamlit
 import streamlit as st
-from streamlit_folium import st_folium
-from streamlit_extras.metric_cards import style_metric_cards 
-from streamlit_vertical_slider import vertical_slider 
 
 # Importar bibliotecas para manejo de imágenes
 from PIL import Image
 import base64
 
-
 # Importar módulos o paquetes locales
 from helper import translate
-
-
 
 ############################################################################
 # Estilo
@@ -93,6 +74,9 @@ st.markdown(f'{translate("requested_by",lang)}<a style="color:blue;font-size:18p
 st.markdown('')
 st.markdown('')
 
+######################## Listado de Tableros ########################
+
+
 # Función para obtener la codificación base64 de una imagen
 def get_image_base64(path):
     with open(path, "rb") as img_file:
@@ -103,6 +87,8 @@ def image_without_link(path, width=300, height=150):
     base64_image = get_image_base64(path)
     html = f'<img src="data:image/png;base64,{base64_image}" width="{width}" height="{height}" style="object-fit: cover; border-radius: 10px;"/>'
     return html
+
+######################## Tablero de Lotes ########################
 
 with st.container(border=True):
     c_1, c_2, c_3 = st.columns([4, 0.5, 8])
@@ -117,6 +103,8 @@ with st.container(border=True):
         st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum interdum diam vitae hendrerit. Vivamus non nibh massa.")
         url_ver_mas = "https://support.geoagro.com/es/kb/"
         st.markdown(f'[{translate("ver_mas", lang)}]({url_ver_mas})', unsafe_allow_html=True)
+
+######################## Tablero de Rindes ########################
 
 with st.container(border=True):
     c_1, c_2, c_3 = st.columns([4, 0.5, 8])
