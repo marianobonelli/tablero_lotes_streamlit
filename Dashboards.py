@@ -4,6 +4,7 @@ import streamlit as st
 # Importar bibliotecas para manejo de imágenes
 from PIL import Image
 import base64
+import io
 
 # Importar módulos o paquetes locales
 from helper import translate
@@ -35,7 +36,71 @@ with open('style.css') as f:
 # Read the CSV file into a DataFrame
 # filtered_df = pd.read_csv('csv_rindes.csv')
 user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': 1, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
-marca_blanca = 'assets/GeoAgro_principal.png'
+
+#####################
+import requests
+
+# Función para realizar la llamada a la API y cachear la respuesta
+@st.cache_data
+def api_call():
+    response = requests.post(url, json={'query': query}, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+access_key_id = st.secrets["API_key"]
+
+# URL de tu API GraphQL y headers
+url = 'https://lpul7iylefbdlepxbtbovin4zy.appsync-api.us-west-2.amazonaws.com/graphql'
+headers = {
+    'x-api-key': access_key_id,
+    'Content-Type': 'application/json'
+}
+
+query = f'''
+query MyQuery {{
+  get_domain(domainId: {user_info['domainId']}, getBase64Logo: true) {{
+    base64Logo
+    hasLogo
+  }}
+}}
+'''
+
+# Llamar a la función api_call que está cacheada
+data = api_call()
+
+import base64
+import io
+from PIL import Image, UnidentifiedImageError
+import binascii
+
+# Define una imagen predeterminada para usar en caso de error
+default_image_path = 'assets/GeoAgro_principal.png'
+logo_image = Image.open(default_image_path)  # Se define aquí para asegurar que siempre exista
+
+if data['data']['get_domain']["hasLogo"]:
+    base64_logo = data['data']['get_domain']['base64Logo']
+
+    # Eliminar la cadena de prefijo si está presente
+    prefix = "data:image/png;base64,"
+    if base64_logo.startswith(prefix):
+        base64_logo = base64_logo.replace(prefix, "", 1)
+
+    # Añadir padding si es necesario
+    padding = 4 - len(base64_logo) % 4
+    if padding:
+        base64_logo += "=" * padding
+
+    try:
+        # Decodificar el string base 64
+        logo_bytes = base64.b64decode(base64_logo)
+
+        # Crear un objeto de imagen
+        logo_image = Image.open(io.BytesIO(logo_bytes))
+    except (binascii.Error, UnidentifiedImageError) as e:
+        print(f"Error al manejar la imagen: {e}")
+        # Se mantiene la imagen predeterminada en caso de error
 
 ##################### USER INFO #####################
 
@@ -49,9 +114,7 @@ st.session_state['env'] = env
 c_1, c_2, c_3 = st.columns([1.5, 4.5, 1], gap="small")
 
 with c_1:
-    image_mb = Image.open(marca_blanca)
-    # image_mb = image_mb.resize((220, 35))
-    st.image(image_mb)
+    st.image(logo_image)
 
 with c_3:   
     try:
