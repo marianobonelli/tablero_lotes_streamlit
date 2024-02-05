@@ -1,10 +1,12 @@
 # Importar bibliotecas para integración web y Streamlit
 import streamlit as st
+import requests  
 
 # Importar bibliotecas para manejo de imágenes
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 import base64
 import io
+import binascii
 
 # Importar módulos o paquetes locales
 from helper import translate
@@ -13,12 +15,12 @@ from helper import translate
 # Estilo
 ############################################################################
 
-# Cargar la imagen
-page_icon = Image.open("assets/favicon geoagro nuevo-13.png")
+# # Cargar la imagen
+# page_icon = Image.open("assets/favicon geoagro nuevo-13.png")
 
 st.set_page_config(
     page_title="Dashboards",
-    page_icon=page_icon,
+    page_icon=Image.open("assets/favicon geoagro nuevo-13.png"),
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
@@ -31,14 +33,13 @@ st.set_page_config(
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-#####################   API   #####################
+###################   User info   ##################
 
 # Read the CSV file into a DataFrame
 # filtered_df = pd.read_csv('csv_rindes.csv')
 user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': 1, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
 
-#####################
-import requests
+#####################   API   #####################
 
 # Función para realizar la llamada a la API y cachear la respuesta
 @st.cache_data
@@ -69,11 +70,6 @@ query MyQuery {{
 
 # Llamar a la función api_call que está cacheada
 data = api_call()
-
-import base64
-import io
-from PIL import Image, UnidentifiedImageError
-import binascii
 
 # Define una imagen predeterminada para usar en caso de error
 default_image_path = 'assets/GeoAgro_principal.png'

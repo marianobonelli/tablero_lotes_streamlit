@@ -57,7 +57,7 @@ import requests
 
 # Función para realizar la llamada a la API y cachear la respuesta
 @st.cache_data
-def api_call():
+def api_call_data():
     response = requests.post(url, json={'query': query}, headers=headers)
     if response.status_code == 200:
         return response.json()
@@ -83,7 +83,7 @@ query MyQuery {{
 '''
 
 # Llamar a la función api_call que está cacheada
-data = api_call()
+data = api_call_data()
 
 @st.cache_data  # 👈 Add the caching decorator
 def load_data(url):
