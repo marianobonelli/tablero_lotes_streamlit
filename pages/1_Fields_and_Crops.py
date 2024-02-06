@@ -15,7 +15,8 @@ from folium.plugins import HeatMap
 import streamlit as st
 from streamlit_folium import st_folium
 from streamlit_extras.metric_cards import style_metric_cards 
-from streamlit_vertical_slider import vertical_slider 
+from streamlit_vertical_slider import vertical_slider
+import requests 
 
 # Importar bibliotecas para manejo de imágenes
 from PIL import Image
@@ -53,7 +54,6 @@ user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', '
 marca_blanca = 'assets/GeoAgro_principal.png'
 
 #####################
-import requests
 
 # Función para realizar la llamada a la API y cachear la respuesta
 @st.cache_data
