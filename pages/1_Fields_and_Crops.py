@@ -549,7 +549,7 @@ if selector_hibrido:
             )
 
             # Mostrar el gráfico actualizado
-            st.plotly_chart(pie_fig, use_container_width=True)
+            st.plotly_chart(pie_fig, theme="streamlit", use_container_width=True)
 
         ############################################################################
         # Gráfico de barras
@@ -601,7 +601,7 @@ if selector_hibrido:
         fig.update_layout(xaxis_tickangle=-45)
 
         # Mostrar el gráfico en Streamlit
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
         ############################################################################
         # mapa
@@ -840,7 +840,7 @@ if selector_hibrido:
                     fig.update_traces(customdata=filtered_df[['info']])
 
                     fig.update_layout(showlegend=False)
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
                 with col2:
 
@@ -882,7 +882,7 @@ if selector_hibrido:
                         showlegend=False,
                         height=600  # Ajustar la altura aquí
                     )
-                    st.plotly_chart(fig_bar, use_container_width=True, config={'displayModeBar': False})
+                    st.plotly_chart(fig_bar, theme="streamlit", use_container_width=True, config={'displayModeBar': False})
 
             with tab2:
 
@@ -957,7 +957,7 @@ if selector_hibrido:
                     secondary_y=True)
 
                 # Mostrar el gráfico en Streamlit
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 
         ############################################################################

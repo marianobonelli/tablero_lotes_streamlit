@@ -112,7 +112,7 @@ with st.container(border=True):
         st.image(Image.open(image_path_lyc))
 
     with c_3:
-        st.subheader(translate("title", lang))
+        st.page_link("pages/1_Fields_and_Crops.py", label=translate("title", lang))
         st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum interdum diam vitae hendrerit. Vivamus non nibh massa.")
         url_ver_mas = "https://support.geoagro.com/es/kb/"
         st.markdown(f'[{translate("ver_mas", lang)}]({url_ver_mas})', unsafe_allow_html=True)
@@ -128,7 +128,7 @@ with st.container(border=True):
         st.image(Image.open(image_tablero_yield))
 
     with c_3:
-        st.subheader(translate("title_yield", lang))
+        st.page_link("pages/2_Yields.py", label=translate("title_yield", lang))
         st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum interdum diam vitae hendrerit. Vivamus non nibh massa.")
         url_ver_mas = "https://support.geoagro.com/es/kb/"
         st.markdown(f'[{translate("ver_mas", lang)}]({url_ver_mas})', unsafe_allow_html=True)
