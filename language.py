@@ -42,7 +42,7 @@ translate_dict = {
     'select_warning': {'en': 'You must select a field to continue', 'es': 'Debe seleccionar un lote para continuar', 'pt': 'Você deve selecionar um campo para continuar'}, 
     'title': {'en': 'Fields and Crops Dashboard', 'es': 'Tablero de Lotes y Cultivos', 'pt': 'Painel de Campos e Cultivos'}, 
     'title_yield': {"en": "Yield Dashboard", "es": "Tablero de Rindes", "pt": "Painel de Rendimento"}, 
-    'ver_mas': {'en': 'See more', 'es': 'Ver más', 'pt': 'Ver mais'},
+    'ver_mas': {'en': 'see more...', 'es': 'ver más...', 'pt': 'ver mais...'},
     'workspace': {'en': 'Work Space', 'es': 'Espacio de Trabajo', 'pt': 'Espaço de Trabalho'}, 
     'adjusted_average_yield': {'en': 'Adjusted Average Yield', 'es': 'Rendimiento Medio Ajustado', 'pt': 'Rendimento Médio Ajustado'}, 
     'adjusted_average_yield_by': {'en': 'Adjusted Average Yield by', 'es': 'Rendimiento medio ajustado por', 'pt': 'Rendimento Médio Ajustado por'}, 
@@ -52,5 +52,14 @@ translate_dict = {
     'weighted_yield': {'en': 'Weighted Yield', 'es': 'Rendimiento Ponderado', 'pt': 'Rendimento Ponderado'}, 
     'weighted_yield_by': {'en': 'Weighted Yield by', 'es': 'Rendimiento Ponderado por', 'pt': 'Rendimento Ponderado por'}, 
     'yield_layer': {'en': 'Yield Layer', 'es': 'Capa de Rinde', 'pt': 'Camada de Rendimento'}, 
-    'yield_layers': {'en': 'Yield Layers', 'es': 'Capas de rindes', 'pt': 'Camadas de Rendimento'}
+    'yield_layers': {'en': 'Yield Layers', 'es': 'Capas de rindes', 'pt': 'Camadas de Rendimento'},
+    'proximamente': {'en': 'Coming Soon!', 'es': 'Próximamente!', 'pt': 'Em Breve!'},
+    'fields_and_crops_dashboard_description': {'en': 'This dashboard provides a detailed view and analysis of the composition of fields and crops registered in the 360 platform. It also allows for the assessment of planting progress through the analysis of planting date data',
+                                               'es': 'Este tablero ofrece una visión detallada y permite el análisis de la composición de lotes y cultivos registrados en la plataforma 360. Además, facilita la evaluación del progreso de la siembra mediante el análisis de los datos correspondientes a las fechas de siembra',
+                                               'pt': 'Este painel oferece uma visão detalhada e permite a análise da composição de lotes e culturas registradas na plataforma 360. Além disso, facilita a avaliação do progresso do plantio por meio da análise dos dados de datas de plantio'
+                                               },
+    'yield_dashboard_description': {'en': '',
+                                    'es': '',
+                                    'pt': ''
+                                    },
     }

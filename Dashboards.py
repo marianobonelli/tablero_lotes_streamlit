@@ -113,9 +113,16 @@ with st.container(border=True):
 
     with c_3:
         st.page_link("pages/1_Fields_and_Crops.py", label=translate("title", lang))
-        st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum interdum diam vitae hendrerit. Vivamus non nibh massa.")
+        # st.write(translate("fields_and_crops_dashboard_description", lang))
+        # url_ver_mas = "https://support.geoagro.com/es/kb/"
+        # st.markdown(f'[{translate("ver_mas", lang)}]({url_ver_mas})', unsafe_allow_html=True)
+        descripcion = translate("fields_and_crops_dashboard_description", lang)
+        texto_ver_mas = translate("ver_mas", lang)
         url_ver_mas = "https://support.geoagro.com/es/kb/"
-        st.markdown(f'[{translate("ver_mas", lang)}]({url_ver_mas})', unsafe_allow_html=True)
+
+        # Usar st.markdown para combinar la descripción y el enlace "ver más" en la misma línea
+        st.markdown(f'{descripcion} [{texto_ver_mas}]({url_ver_mas})', unsafe_allow_html=True)
+
 
 ######################## Tablero de Rindes ########################
 
@@ -129,6 +136,9 @@ with st.container(border=True):
 
     with c_3:
         st.page_link("pages/2_Yields.py", label=translate("title_yield", lang))
-        st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum interdum diam vitae hendrerit. Vivamus non nibh massa.")
+        descripcion = translate("proximamente", lang) # translate("yield_dashboard_description", lang)
+        texto_ver_mas = '' # translate("ver_mas", lang)
         url_ver_mas = "https://support.geoagro.com/es/kb/"
-        st.markdown(f'[{translate("ver_mas", lang)}]({url_ver_mas})', unsafe_allow_html=True)
+
+        # Usar st.markdown para combinar la descripción y el enlace "ver más" en la misma línea
+        st.markdown(f'{descripcion} [{texto_ver_mas}]({url_ver_mas})', unsafe_allow_html=True)
