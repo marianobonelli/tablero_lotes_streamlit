@@ -153,3 +153,6 @@ div.css-6qob1r.e1fqkh3o3 {
    font-family: 'Roboto';
    font-size: 1rem;
 }
+
+button[title="View fullscreen"]{
+   visibility: hidden;}
