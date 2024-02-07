@@ -22,7 +22,7 @@ import requests
 from PIL import Image
 
 # Importar módulos o paquetes locales
-from helper import translate
+from helper import translate, api_call_logo, api_call_fields_table
 
 ############################################################################
 # Estilo
@@ -53,56 +53,18 @@ with open('style.css') as f:
 user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': 1, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
 marca_blanca = 'assets/GeoAgro_principal.png'
 
-#####################
+##################### API DataFrame: helper.py -> api_call_fields_table #####################
 
 # Función para realizar la llamada a la API y cachear la respuesta
 @st.cache_data
-def api_call_data():
-    response = requests.post(url, json={'query': query}, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+def get_fields_table(user_info, access_key_id):
+    df = api_call_fields_table(user_info, access_key_id)
+    return df
 
 access_key_id = st.secrets["API_key"]
 
-# URL de tu API GraphQL y headers
-url = 'https://lpul7iylefbdlepxbtbovin4zy.appsync-api.us-west-2.amazonaws.com/graphql'
-headers = {
-    'x-api-key': access_key_id,
-    'Content-Type': 'application/json'
-}
-
-# Tu consulta GraphQL
-query = f'''
-query MyQuery {{
-  get_field_table(domainId: {user_info['domainId']}, email: "{user_info['email']}", exportAllAsCsv: true, lang: "{user_info['language']}", withHectares: true, withCentroid: true, withGeom: true, delimiter: ";") {{
-    csvUrl
-  }}
-}}
-'''
-
-# Llamar a la función api_call que está cacheada
-data = api_call_data()
-
-@st.cache_data  # 👈 Add the caching decorator
-def load_data(url):
-    df = pd.read_csv(url, delimiter=";")
-    return df
-
-# Verificar y manejar la respuesta
-if data:
-    csv_url = data['data']['get_field_table']['csvUrl']
-    filtered_df = load_data(csv_url)
-    # Eliminar filas donde 'hectares' es NaN
-    filtered_df = filtered_df.dropna(subset=['hectares'])
-
-    # Eliminar filas donde 'hectares' es igual a 0
-    filtered_df = filtered_df[filtered_df['hectares'] != 0]
-
-    # Procesar filtered_df
-else:
-    st.error("No se pudo obtener datos de la API.")
+# Llamar a la función get_fields_table que está cacheada
+data, filtered_df = get_fields_table(user_info, access_key_id)
 
 ##################### USER INFO #####################
 
@@ -111,30 +73,26 @@ email = user_info['email']
 env = user_info['env']
 st.session_state['env'] = env
 
-##################### LANGUAGE  #####################
+##################### LOGO AND LANGUAGE  #####################
+
+@st.cache_data
+def get_logo(user_info, access_key_id, default_logo_path):
+    logo_image = api_call_logo(user_info, access_key_id, default_logo_path)
+    return logo_image
 
 c_1, c_2, c_3 = st.columns([1.5, 4.5, 1], gap="small")
 
 with c_1:
-    image_mb = Image.open(marca_blanca)
-    # image_mb = image_mb.resize((220, 35))
-    st.image(image_mb)
+    try:
+        logo_image = st.session_state['logo_image']
+    except:
+        access_key_id = st.secrets["API_key"]
+        default_logo='assets/GeoAgro_principal.png'
 
-# with c_3:   
-#     try:
-#         langs = ['es', 'en', 'pt']
-#         if language is not None:
-#             lang = st.selectbox(translate("language", language), label_visibility="hidden", options=langs, index=langs.index(language))
-#         else:  # from public link
-#             lang = st.selectbox(translate("es", language), label_visibility="hidden", options=langs)
-        
-#         st.session_state['lang'] = lang
-#     except Exception as exception:
-#         lang = "es"
-#         st.session_state['lang'] = lang
-#         pass
+        logo_image = get_logo(user_info, access_key_id, default_logo_path='assets/GeoAgro_principal.png')
+        st.session_state['logo_image'] = logo_image
 
-# lang = st.session_state['lang']
+    st.image(logo_image)
 
 try:
     lang = st.session_state['lang']

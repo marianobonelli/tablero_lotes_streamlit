@@ -9,7 +9,7 @@ import io
 import binascii
 
 # Importar módulos o paquetes locales
-from helper import translate
+from helper import translate, api_call_logo
 
 ############################################################################
 # Estilo
@@ -39,64 +39,18 @@ with open('style.css') as f:
 # filtered_df = pd.read_csv('csv_rindes.csv')
 user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': 1, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
 
-#####################   API   #####################
-
-# Función para realizar la llamada a la API y cachear la respuesta
-@st.cache_data
-def api_call():
-    response = requests.post(url, json={'query': query}, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+##################### API Logo Marca Blanca #####################
 
 access_key_id = st.secrets["API_key"]
+default_logo='assets/GeoAgro_principal.png'
 
-# URL de tu API GraphQL y headers
-url = 'https://lpul7iylefbdlepxbtbovin4zy.appsync-api.us-west-2.amazonaws.com/graphql'
-headers = {
-    'x-api-key': access_key_id,
-    'Content-Type': 'application/json'
-}
+@st.cache_data
+def get_logo(user_info, access_key_id, default_logo_path):
+    logo_image = api_call_logo(user_info, access_key_id, default_logo_path)
+    return logo_image
 
-query = f'''
-query MyQuery {{
-  get_domain(domainId: {user_info['domainId']}, getBase64Logo: true) {{
-    base64Logo
-    hasLogo
-  }}
-}}
-'''
-
-# Llamar a la función api_call que está cacheada
-data = api_call()
-
-# Define una imagen predeterminada para usar en caso de error
-default_image_path = 'assets/GeoAgro_principal.png'
-logo_image = Image.open(default_image_path)  # Se define aquí para asegurar que siempre exista
-
-if data['data']['get_domain']["hasLogo"]:
-    base64_logo = data['data']['get_domain']['base64Logo']
-
-    # Eliminar la cadena de prefijo si está presente
-    prefix = "data:image/png;base64,"
-    if base64_logo.startswith(prefix):
-        base64_logo = base64_logo.replace(prefix, "", 1)
-
-    # Añadir padding si es necesario
-    padding = 4 - len(base64_logo) % 4
-    if padding:
-        base64_logo += "=" * padding
-
-    try:
-        # Decodificar el string base 64
-        logo_bytes = base64.b64decode(base64_logo)
-
-        # Crear un objeto de imagen
-        logo_image = Image.open(io.BytesIO(logo_bytes))
-    except (binascii.Error, UnidentifiedImageError) as e:
-        print(f"Error al manejar la imagen: {e}")
-        # Se mantiene la imagen predeterminada en caso de error
+logo_image = get_logo(user_info, access_key_id, default_logo_path='assets/GeoAgro_principal.png')
+st.session_state['logo_image'] = logo_image
 
 ##################### USER INFO #####################
 

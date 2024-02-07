@@ -18,7 +18,7 @@ from streamlit_folium import st_folium
 from PIL import Image
 
 # Importar módulos o paquetes locales
-from helper import translate
+from helper import translate, api_call_logo
 
 # from streamlit_option_menu import option_menu
 # from streamlit_elements import elements, mui, html, sync
@@ -61,30 +61,26 @@ st.set_page_config(
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-##################### LANGUAGE  #####################
+##################### LOGO AND LANGUAGE  #####################
+
+@st.cache_data
+def get_logo(user_info, access_key_id, default_logo_path):
+    logo_image = api_call_logo(user_info, access_key_id, default_logo_path)
+    return logo_image
 
 c_1, c_2, c_3 = st.columns([1.5, 4.5, 1], gap="small")
 
 with c_1:
-    image_mb = Image.open(marca_blanca)
-    # image_mb = image_mb.resize((220, 35))
-    st.image(image_mb)
+    try:
+        logo_image = st.session_state['logo_image']
+    except:
+        access_key_id = st.secrets["API_key"]
+        default_logo='assets/GeoAgro_principal.png'
 
-# with c_3:   
-#     try:
-#         langs = ['es', 'en', 'pt']
-#         if language is not None:
-#             lang = st.selectbox(translate("language", language), label_visibility="hidden", options=langs, index=langs.index(language))
-#         else:  # from public link
-#             lang = st.selectbox(translate("es", language), label_visibility="hidden", options=langs)
-        
-#         st.session_state['lang'] = lang
-#     except Exception as exception:
-#         lang = "es"
-#         st.session_state['lang'] = lang
-#         pass
+        logo_image = get_logo(user_info, access_key_id, default_logo_path='assets/GeoAgro_principal.png')
+        st.session_state['logo_image'] = logo_image
 
-# lang = st.session_state['lang']
+    st.image(logo_image)
 
 try:
     lang = st.session_state['lang']
