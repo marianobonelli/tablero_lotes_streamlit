@@ -28,7 +28,7 @@ from helper import translate, api_call_logo
 
 
 # Read the CSV file into a DataFrame
-filtered_df = pd.read_csv('csv_rindes.csv')
+filtered_df = pd.read_csv('CRIT_CERES_RINDES.csv', delimiter=';')
 user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': None, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
 marca_blanca = 'assets/GeoAgro_principal.png'
 
@@ -245,7 +245,7 @@ with st.sidebar:
     hybridos = sorted(filtered_df['hybrid'].unique().tolist())
 
     container = st.container()
-    select_all_hybrid = st.toggle(translate("select_all", lang), key='select_all_hybrid')
+    select_all_hybrid = st.toggle(translate("select_all", lang), value=True, key='select_all_hybrid')
 
     if select_all_hybrid:
         selector_hybrid = container.multiselect(
@@ -295,7 +295,7 @@ with st.sidebar:
             capas_modificadas.append(capa)
 
     container = st.container()
-    select_all_capas = st.toggle(translate("select_all", lang), key='select_all_capas')
+    select_all_capas = st.toggle(translate("select_all", lang), value=True, key='select_all_capas')
 
     if select_all_capas:
         selector_capas = container.multiselect(
@@ -582,7 +582,7 @@ if selector_capas:
 
     # Agregar heatmap al mapa como un layer adicional
 
-    heatmap_feature_group = FeatureGroup(name=translate('heatmap', lang), show=False)  # Creamos un nuevo FeatureGroup para el heatmap
+    heatmap_feature_group = FeatureGroup(name=translate('heatmap_yield', lang), show=False)  # Creamos un nuevo FeatureGroup para el heatmap
     HeatMap(heat_data).add_to(heatmap_feature_group)  # Agregamos el heatmap a este FeatureGroup
     heatmap_feature_group.add_to(m)  # Agregamos el FeatureGroup al mapa
 

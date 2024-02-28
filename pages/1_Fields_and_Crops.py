@@ -55,16 +55,24 @@ marca_blanca = 'assets/GeoAgro_principal.png'
 
 ##################### API DataFrame: helper.py -> api_call_fields_table #####################
 
+# # Función para realizar la llamada a la API y cachear la respuesta
+# @st.cache_data
+# def get_fields_table(user_info, access_key_id):
+#     df = api_call_fields_table(user_info, access_key_id)
+#     return df
+
+# access_key_id = st.secrets["API_key"]
+
+# # Llamar a la función get_fields_table que está cacheada
+# data, filtered_df = get_fields_table(user_info, access_key_id)
+
 # Función para realizar la llamada a la API y cachear la respuesta
 @st.cache_data
-def get_fields_table(user_info, access_key_id):
-    df = api_call_fields_table(user_info, access_key_id)
+def get_fields_table(path, delimiter=";"):
+    df = pd.read_csv(path, delimiter=";")
     return df
 
-access_key_id = st.secrets["API_key"]
-
-# Llamar a la función get_fields_table que está cacheada
-data, filtered_df = get_fields_table(user_info, access_key_id)
+filtered_df = get_fields_table('CRIT_CERES_RINDES.csv', delimiter=";")
 
 ##################### USER INFO #####################
 

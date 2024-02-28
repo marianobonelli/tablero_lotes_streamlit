@@ -17,6 +17,7 @@ translate_dict = {
     'fields_without_hybrids_or_varieties': {'en': 'Fields without hybrids/varieties', 'es': 'Lotes sin híbridos/variedades', 'pt': 'Campos sem híbridos/variedades'}, 
     'fields_without_sowing_date': {'en': 'Fields without sowing date', 'es': 'Lotes sin fecha de siembra', 'pt': 'Campos sem data de plantio'}, 
     'heatmap': {'en': 'Heatmap by Hectares', 'es': 'Heatmap por Hectáreas', 'pt': 'Heatmap por Hectares'}, 
+    'heatmap_yield': {'en': 'Heatmap by Yield', 'es': 'Heatmap por Rendimiento', 'pt': 'Heatmap por Rendimento'}, 
     'hectares': {'en': 'Hectares', 'es': 'Hectáreas', 'pt': 'Hectares'}, 
     'hectares_by': {'en': 'Hectares by', 'es': 'Hectáreas por', 'pt': 'Hectares por'}, 
     'hectares_per_date': {'en': 'Hectares per seeding date', 'es': 'Hectáreas por fecha de siembra', 'pt': 'Hectares por data de semeadura'}, 
